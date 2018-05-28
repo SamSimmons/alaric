@@ -1,0 +1,51 @@
+/*
+@font-face {
+  font-family: 'GT-America-Standard-Black-Italic';
+  src: url("./fonts/GT-America-Black-Italic.woff2") format("woff2") url();
+  font-weight: normal;
+  font-style: normal;
+} */
+
+:root {
+  --primary: #393fef;
+  --secondary: #f5cf46;
+}
+
+@font-face {
+  font-family: 'GT-America';
+  src: local('GT-America-Standard-Black-Italic'), url("./fonts/GT-America-Black-Italic.woff2") format('woff2');
+  font-weight: 700;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'GT-America';
+  src: local('GT-America-Standard-Black'), url("./fonts/GT-America-Black.woff2") format('woff2');
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: 'GT-America';
+  src: local('GT-America-Standard-Regular'), url("./fonts/GT-America-Regular.woff2") format('woff2');
+  font-weight: 400;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'GT-America', serif;
+}
+
+.title {
+  font-family: 'GT-America', serif;
+  font-weight: 700;
+  font-size: 5rem;
+  padding-left: 2rem;
+}
+
+.header {
+  align-items: center;
+  color: var(--primary);
+  display: flex;
+  min-height: 12rem;
+}

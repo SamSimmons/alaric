@@ -1,7 +1,19 @@
-from django.contrib.auth.models import User
+from stalker.models import Grappler, Clip
 from rest_framework import serializers
+from taggit_serializer.serializers import (TagListSerializerField, TaggitSerializer)
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class GrapplerSerializer(serializers.HyperlinkedModelSerializer):
+
     class Meta:
-        model = User
-        fields = ('url', 'username', 'email', 'groups')
+        model = Grappler
+        fields = '__all__'
+
+
+class ClipSerializer(TaggitSerializer, serializers.ModelSerializer):
+
+    tags = TagListSerializerField()
+
+    class Meta:
+        model = Clip
+        # fields = ('grappler', 'video', 'tags')
+        fields = '__all__'

@@ -46,6 +46,8 @@ DJANGO_APPS = (
 
 THIRD_PARTY_APPS = (
     'rest_framework',
+    'taggit',
+    'taggit_serializer',
 )
 
 LOCAL_APPS = (
