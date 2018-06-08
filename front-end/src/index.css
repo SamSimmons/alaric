@@ -1,10 +1,3 @@
-/*
-@font-face {
-  font-family: 'GT-America-Standard-Black-Italic';
-  src: url("./fonts/GT-America-Black-Italic.woff2") format("woff2") url();
-  font-weight: normal;
-  font-style: normal;
-} */
 
 :root {
   --primary: #393fef;
@@ -30,6 +23,19 @@
   font-weight: 400;
 }
 
+@font-face {
+  font-family: 'GT-America';
+  src: local('GT-America-Thin'), url("./fonts/GT-America-Thin.woff2") format('woff2');
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: 'GT-America';
+  src: local('GT-America-Thin-Italic'), url("./fonts/GT-America-Thin-Italic.woff2") format('woff2');
+  font-weight: 300;
+  font-style: italic;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -37,10 +43,10 @@ body {
 }
 
 .title {
+  border-bottom: 4px transparent solid;
   font-family: 'GT-America', serif;
   font-weight: 700;
   font-size: 5rem;
-  padding-left: 2rem;
 }
 
 .header {
@@ -48,4 +54,128 @@ body {
   color: var(--primary);
   display: flex;
   min-height: 12rem;
+  justify-content: space-between;
+  padding: 0 4rem 0 2rem;
+}
+
+.title:hover {
+  background: white;
+  border-bottom: 4px dashed var(--primary);
+  fill: var(--primary);
+  cursor: pointer;
+}
+
+.icon__wrapper {
+  background: var(--primary);
+  border-radius: 50%;
+  height: 3rem;
+  fill: white;
+  padding: 10px;
+  width: 3rem;
+}
+
+.icon__wrapper:hover {
+  background: white;
+  border: 4px dashed var(--primary);
+  fill: var(--primary);
+  cursor: pointer;
+}
+
+.icon {
+  height: 100%;
+  width: 100%;
+}
+
+.body {
+  margin: 0 auto;
+  max-width: 1000px;
+}
+
+.profile {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.avatar {
+  border-radius: 50%;
+  margin-right: 5rem;
+  max-height: 120px;
+  max-width: 120px;
+}
+
+.avatar img {
+  border-radius: 50%;
+  mix-blend-mode: multiply;
+  filter: grayscale(100%);
+  width: 100%;
+}
+
+.sub-head {
+  font-size: 4rem;
+  font-weight: 300;
+}
+
+.clip__container {
+  max-width: 450px;
+}
+
+.clip__video {
+  width: 100%;
+}
+
+a, a:visited, a:hover, a:active {
+  color: inherit;
+}
+
+.upload-form {
+  max-width: 40rem;
+  margin: 0 auto;
+}
+
+.fieldset {
+  margin-bottom: 2rem;
+  display: flex;
+  flex-flow: column;
+}
+
+.label {
+  font-size: 1.2rem;
+  margin-bottom: .5rem;
+}
+
+.btn {
+  background: transparent;
+  border: 3px solid var(--primary);
+  color: var(--primary);
+  cursor: pointer;
+  font-weight: 700;
+  padding: .75rem 1.25rem;
+}
+
+.btn:hover { border: 3px dashed var(--primary); }
+
+.btn--primary {
+  background: var(--primary);
+  color: #fff;
+}
+
+.btn--primary:hover {
+  border: 3px dashed var(--primary);
+  color: var(--primary);
+  background: transparent;
+}
+
+.btn-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-container .btn:last-child { margin-left: 1rem; }
+
+.loader {
+  width: 100px;
+  height: 100px;
+  margin: 20px;
+  display:inline-block;
+  fill: var(--secondary);
 }
