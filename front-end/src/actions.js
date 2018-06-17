@@ -15,6 +15,10 @@ export const GRAPPLERS_REQUEST  = 'GRAPPLERS_REQUEST'
 export const GRAPPLERS_SUCCESS  = 'GRAPPLERS_SUCCESS'
 export const GRAPPLERS_FAILURE  = 'GRAPPLERS_FAILURE'
 
+export const CREATE_GRAPPLER_REQUEST  = 'CREATE_GRAPPLER_REQUEST'
+export const CREATE_GRAPPLER_SUCCESS  = 'CREATE_GRAPPLER_SUCCESS'
+export const CREATE_GRAPPLER_FAILURE  = 'CREATE_GRAPPLER_FAILURE'
+
 export function getClips(grapplerId) {
   return {
     type: CLIPS_REQUEST,
@@ -61,12 +65,6 @@ export const uploadRequest = (params) => ({
   params
 })
 
-export const uploadProgress = (file, progress) => ({
-  type: UPLOAD_PROGRESS,
-  file,
-  progress,
-})
-
 export const uploadSuccess = (file) => ({
   type: UPLOAD_SUCCESS,
   file
@@ -75,6 +73,21 @@ export const uploadSuccess = (file) => ({
 export const uploadFailure = (file, err) => ({
   type: UPLOAD_FAILURE,
   file,
+  err
+})
+
+export const createGrappler = (data) => ({
+  type: CREATE_GRAPPLER_REQUEST,
+  data
+})
+
+export const createGrapplerSuccess = (file) => ({
+  type: CREATE_GRAPPLER_SUCCESS,
+  file
+})
+
+export const createGrapplerFailure = (err) => ({
+  type: CREATE_GRAPPLER_FAILURE,
   err
 })
 

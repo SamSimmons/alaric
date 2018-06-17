@@ -8,23 +8,29 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import reducer from './reducers'
 import { watcherSaga } from './sagas'
-import { BrowserRouter } from 'react-router-dom'
+import { createBrowserHistory } from 'history'
+import { connectRouter, routerMiddleware, ConnectedRouter } from 'connected-react-router'
 
-const saga = createSagaMiddleware()
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-
+const history = createBrowserHistory()
+const saga = createSagaMiddleware()
 const store = createStore(
-  reducer,
-  composeEnhancers(applyMiddleware(saga))
+  connectRouter(history)(reducer),
+  composeEnhancers(
+    applyMiddleware(
+      routerMiddleware(history),
+      saga,
+    )
+  )
 )
 
 saga.run(watcherSaga)
 
 ReactDOM.render(
   <Provider store={store}>
-    <BrowserRouter>
+    <ConnectedRouter history={history}>
       <App />
-    </BrowserRouter>
+    </ConnectedRouter>
   </Provider>,
   document.getElementById('root')
 )

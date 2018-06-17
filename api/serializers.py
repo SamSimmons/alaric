@@ -6,7 +6,7 @@ class GrapplerSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Grappler
-        fields = ('url', 'name', 'id')
+        fields = ('url', 'name', 'id', 'avatar')
 
 
 class ClipSerializer(TaggitSerializer, serializers.ModelSerializer):

@@ -15,6 +15,7 @@ class Match(models.Model):
 
 class Grappler(models.Model):
     name = models.CharField(max_length=50, unique=True)
+    avatar = models.ImageField(upload_to="avatars/", blank=True)
 
     def __str__(self):
         return self.name
