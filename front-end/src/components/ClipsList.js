@@ -10,7 +10,7 @@ const ClipsList = (props) => {
         (clip) =>
           <div className="clip__container" key={clip.video}>
             <video className="clip__video" src={clip.video} controls />
-            <Link to={`${clip.grappler}/clip/${clip.id}/`}>{clip.video}</Link>
+            <Link to={`/${clip.grappler}/clip/${clip.id}/`}>{clip.video}</Link>
           </div>
       )}
     </div>

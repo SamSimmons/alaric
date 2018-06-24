@@ -1,30 +1,35 @@
-import { takeLatest, call, put, takeEvery } from 'redux-saga/effects'
+import { takeLatest, call, put, takeEvery, select } from 'redux-saga/effects'
 import {
   CLIPS_REQUEST, recieveClips, CLIPS_FAILURE,
   CLIP_REQUEST,
   UPLOAD_REQUEST, uploadSuccess, uploadFailure,
   GRAPPLERS_REQUEST, recieveGrapplers, grapplersFail,
+  GRAPPLER_REQUEST, recieveGrappler, grapplerFail,
   CREATE_GRAPPLER_REQUEST, createGrapplerSuccess, createGrapplerFailure,
+  DELETE_CLIP_REQUEST, deleteClipSuccess, deleteClipFailure,
 } from './actions'
 import { push } from 'connected-react-router'
 import axios from 'axios'
+import { find } from 'lodash'
 
 export function* watcherSaga() {
   yield takeLatest(CLIPS_REQUEST, clipsSaga)
   yield takeLatest(CLIP_REQUEST, clipSaga)
   yield takeEvery(UPLOAD_REQUEST, uploadSaga)
+  yield takeEvery(DELETE_CLIP_REQUEST, deleteClipSaga)
   yield takeLatest(GRAPPLERS_REQUEST, grapplersSaga)
+  yield takeLatest(GRAPPLER_REQUEST, grapplerSaga)
   yield takeLatest(CREATE_GRAPPLER_REQUEST, createGrapplerSaga)
 }
 
-function* clipsSaga() {
+function* clipsSaga(action) {
   try {
-    const response = yield call(
-      () => axios({
-        method: 'get',
-        url: '/clips/'
-      })
-    )
+    const { grapplerId } = action
+    const fetchClips = (grapplerId)
+      ? () => axios({ method: 'get', url: `/grappler-clips/${grapplerId}/` })
+      : () => axios({ method: 'get', url: '/clips/' })
+
+    const response = yield call(fetchClips)
     const list = response.data;
     yield put(recieveClips(list))
   } catch (err) {
@@ -62,6 +67,27 @@ function* grapplersSaga() {
   }
 }
 
+function* grapplerSaga(action) {
+  try {
+    const { id } = action
+    const grapplers = yield select((state) => state.grapplers.list)
+    const found = find(grapplers, ['id', +id])
+    if (found) {
+      yield put(recieveGrappler(found))
+    } else {
+      const response = yield call(
+        () => axios({
+          method: 'get',
+          url: `/grapplers/${id}/`
+        })
+      )
+      yield put(recieveGrappler(response.data))
+    }
+  } catch (err) {
+    yield put(grapplerFail(err))
+  }
+}
+
 function* createGrapplerSaga(action) {
   try {
     const { name, avatar } = action.data
@@ -88,21 +114,41 @@ function* createGrapplerSaga(action) {
 
 function* uploadSaga(action) {
   try {
-    console.log('sdsdsad', action)
-    const { grappler, video } = action.params
+    const { grappler, files } = action.params
     const tags = action.params.tags.length ? action.params.tags.map((t) => t.value) : ""
 
     const data =  new FormData()
-
     data.append('grappler', grappler.value)
     data.append('tags', tags)
-    data.append('video', video)
-
+    for(let key in files) {
+      data.append(`videos[${key}]`, files[key])
+    }
     const response = yield call(
-      () => axios.post('/clips/', data)
+      () => axios.post(
+        '/clips/?multi=true',
+        data,
+        { headers: { 'Content-Type': 'multipart/form-data' } }
+      )
     )
-    uploadSuccess(response)
+    yield put(uploadSuccess(response))
+    yield put(push(`/${grappler.value}/`))
   } catch (err) {
     yield put(uploadFailure(err))
+  }
+}
+
+function* deleteClipSaga(action) {
+  try {
+    const { id } = action
+    yield call(
+      () => axios({
+        method: 'delete',
+        url: `/clips/${id}/`,
+      })
+    )
+    yield put(deleteClipSuccess())
+    yield put(push('/'))
+  } catch (err) {
+    yield put(deleteClipFailure(err))
   }
 }

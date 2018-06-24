@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { getGrapplers, uploadRequest } from '../actions'
 import Select from 'react-select'
+import { Link } from 'react-router-dom'
 import 'react-select/dist/react-select.css'
 
 const tagOptions = [
@@ -17,7 +18,7 @@ const tagOptions = [
 
 class Upload extends Component {
   state = {
-    video: null,
+    files: [],
     grappler: null,
     tags: [],
   }
@@ -25,6 +26,15 @@ class Upload extends Component {
   componentDidMount() {
     const { getGrapplers } = this.props
     getGrapplers()
+  }
+
+  getFileLabel() {
+    const { files } = this.state
+    switch (files.length) {
+      case 0: { return "Choose a File"}
+      case 1: { return "1 File Selected"}
+      default: { return `${files.length} Files Selected` }
+    }
   }
 
   render() {
@@ -42,7 +52,7 @@ class Upload extends Component {
     return (
       <div className="upload-form">
         <div className="fieldset">
-          <label className="label" htmlFor="grappler">Grappler</label>
+          <label className="label section-title" htmlFor="grappler">Grappler</label>
           <Select
             name="grappler"
             value={grappler}
@@ -53,15 +63,21 @@ class Upload extends Component {
           />
         </div>
         <div className="fieldset">
-          <label className="label" htmlFor="video">Select File</label>
-          <input name="video" type="file" onChange={(e) => {
-              const file = e.target.files[0]
-              this.setState({ video: file })
+          <label htmlFor="file" className="label label--file section-title">{this.getFileLabel()}</label>
+          <input
+            className="inputfile"
+            multiple="multiple"
+            name="file"
+            id="file"
+            type="file"
+            onChange={(e) => {
+              const files = e.target.files
+              this.setState({ files })
             }}
           />
         </div>
         <div className="fieldset">
-          <label className="label" htmlFor="tags">Tags</label>
+          <label className="label section-title" htmlFor="tags">Tags</label>
           <Select
             name="tags"
             value={tags}
@@ -73,18 +89,9 @@ class Upload extends Component {
           />
         </div>
         <div className="btn-container">
+          <Link to="/" className="btn btn--secondary">Cancel</Link>
           <button
             className="btn"
-            onClick={() => {
-              this.setState({
-                video: null,
-                grappler: null,
-                tags: [],
-              })
-            }}
-          >Clear</button>
-          <button
-            className="btn btn--primary"
             onClick={() => {
               const { uploadRequest } = this.props
               uploadRequest(this.state)

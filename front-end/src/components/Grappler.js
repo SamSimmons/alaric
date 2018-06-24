@@ -2,23 +2,26 @@ import React, { Component } from 'react';
 import Profile from './Profile'
 import ClipsList from './ClipsList'
 import { connect } from 'react-redux'
-import { getClips } from '../actions'
-
-const grappler = {
-  name: "Gordon Ryan",
-  clips: 14,
-  avatar: "https://instagram.fakl4-1.fna.fbcdn.net/vp/0bd31aa0ff39ac651ef46dd8a4c403fe/5BA37508/t51.2885-19/s150x150/21372273_2037724493180894_6034611763083739136_a.jpg",
-  options: ["Sweeps", "Takedowns", "Submissions", "Passes"]
-}
+import { getClips, getGrappler, clearGrappler } from '../actions'
+import { withRouter } from 'react-router-dom'
 
 class Grappler extends Component {
 
   componentDidMount() {
-    const { getClips } = this.props
-    getClips(1)
+    const { grappler, id, getClips, getGrappler } = this.props
+    if (!grappler) {
+      getGrappler(id)
+    }
+    getClips(id)
+  }
+
+  componentWillUnmount() {
+    const { clearGrappler } = this.props
+    clearGrappler()
   }
 
   render () {
+    const { grappler } = this.props
     return (
       <div className="body">
         <Profile {...grappler} />
@@ -28,16 +31,24 @@ class Grappler extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
+  const id = ownProps.match.params.grappler
   return {
-    clips: state.clips.list
+    id,
+    grappler: state.grapplers.selected,
+    clips: state.clips.list,
+    loading: (state.grapplers.loading || state.clips.loading)
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     getClips: (id) => dispatch(getClips(id)),
+    getGrappler: (id) => dispatch(getGrappler(id)),
+    clearGrappler: () => dispatch(clearGrappler()),
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Grappler)
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(Grappler)
+)

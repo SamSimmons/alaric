@@ -17,3 +17,16 @@ class ClipSerializer(TaggitSerializer, serializers.ModelSerializer):
         model = Clip
         # fields = ('grappler', 'video', 'tags')
         fields = '__all__'
+
+class FileListSerializer (serializers.Serializer ) :
+    image = serializers.ListField(
+                       child=serializers.FileField( max_length=100000,
+                                         allow_empty_file=False,
+                                         use_url=False )
+                                )
+    def create(self, validated_data):
+        blogs=Blogs.objects.latest('created_at')
+        video_list=validated_data.pop('video')
+        for video in video_list:
+            photo=Photo.objects.create(image=img,blogs=blogs,**validated_data)
+        return pho
