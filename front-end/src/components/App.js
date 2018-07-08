@@ -4,6 +4,7 @@ import Grappler from './Grappler'
 import GrapplerList from './GrapplerList'
 import CreateGrappler from './CreateGrappler'
 import Clip from './Clip'
+import ClipsList from './ClipsList'
 import Home from './Home'
 import Upload from './Upload'
 import { Route, Switch } from 'react-router-dom'
@@ -19,14 +20,17 @@ class App extends Component {
       <div className="App">
         <Header />
         <div className='divider' />
-        <Switch>
-          <Route path="/:grappler/clip/:id/" component={Clip} />
-          <Route path="/upload/" component={Upload} />
-          <Route path="/create/" component={CreateGrappler} />
-          <Route path="/grapplers" component={GrapplerList} />
-          <Route path="/:grappler/" component={Grappler} />
-          <Route exact path="/" component={Home} />
-        </Switch>
+        <div className='body'>
+          <Switch>
+            <Route path="/:grappler/clip/:id/" component={Clip} />
+            <Route path="/upload/" component={Upload} />
+            <Route path="/create/" component={CreateGrappler} />
+            <Route path="/grapplers" component={GrapplerList} />
+            <Route path="/clips/" component={ClipsList} />
+            <Route path="/:grappler/" component={Grappler} />
+            <Route exact path="/" component={Home} />
+          </Switch>
+        </div>
       </div>
     );
   }

@@ -232,3 +232,5 @@ pip-selfcheck.json
 
 
 media/
+
+node_modules/

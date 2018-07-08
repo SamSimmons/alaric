@@ -2,13 +2,13 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { getClips, getGrapplers } from '../actions'
-import { find, get } from 'lodash'
+import { find } from 'lodash'
 
 class AllClips extends Component {
 
   componentDidMount() {
-    const { getClips, getGrapplers, grapplers, nextPage, selectedGrappler } = this.props
-    getClips(selectedGrappler, nextPage)
+    const { getClips, getGrapplers, grapplers, nextPage } = this.props
+    getClips(null, nextPage)
     if (!grapplers.length) {
       getGrapplers()
     }
@@ -53,7 +53,6 @@ const mapStateToProps = (state) => {
     grapplers: state.grapplers.list,
     nextPage: state.clips.nextPage,
     total: state.clips.total,
-    selectedGrappler: get(state.grapplers, 'selected.id')
   }
 }
 

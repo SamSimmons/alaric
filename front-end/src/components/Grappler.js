@@ -8,11 +8,11 @@ import { withRouter } from 'react-router-dom'
 class Grappler extends Component {
 
   componentDidMount() {
-    const { grappler, id, getClips, getGrappler } = this.props
+    const { grappler, id, getClips, getGrappler, nextPage } = this.props
     if (!grappler) {
       getGrappler(id)
     }
-    getClips(id)
+    getClips(id, nextPage)
   }
 
   componentWillUnmount() {
@@ -37,13 +37,14 @@ const mapStateToProps = (state, ownProps) => {
     id,
     grappler: state.grapplers.selected,
     clips: state.clips.list,
-    loading: (state.grapplers.loading || state.clips.loading)
+    loading: (state.grapplers.loading || state.clips.loading),
+    nextPage: state.clips.nextPage
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getClips: (id) => dispatch(getClips(id)),
+    getClips: (id, page) => dispatch(getClips(id, page)),
     getGrappler: (id) => dispatch(getGrappler(id)),
     clearGrappler: () => dispatch(clearGrappler()),
   }

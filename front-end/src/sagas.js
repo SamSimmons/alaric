@@ -1,12 +1,13 @@
 import { takeLatest, call, put, takeEvery, select } from 'redux-saga/effects'
 import {
-  CLIPS_REQUEST, recieveClips, CLIPS_FAILURE,
-  CLIP_REQUEST,
+  CLIPS_REQUEST, recieveClips, clipsFail,
+  CLIP_REQUEST, recieveClip, clipFail,
   UPLOAD_REQUEST, uploadSuccess, uploadFailure,
   GRAPPLERS_REQUEST, recieveGrapplers, grapplersFail,
   GRAPPLER_REQUEST, recieveGrappler, grapplerFail,
   CREATE_GRAPPLER_REQUEST, createGrapplerSuccess, createGrapplerFailure,
   DELETE_CLIP_REQUEST, deleteClipSuccess, deleteClipFailure,
+  UPDATE_CLIP_REQUEST, updateClipSuccess, updateClipFailure,
 } from './actions'
 import { push } from 'connected-react-router'
 import axios from 'axios'
@@ -17,6 +18,7 @@ export function* watcherSaga() {
   yield takeLatest(CLIP_REQUEST, clipSaga)
   yield takeEvery(UPLOAD_REQUEST, uploadSaga)
   yield takeEvery(DELETE_CLIP_REQUEST, deleteClipSaga)
+  yield takeLatest(UPDATE_CLIP_REQUEST, updateClipSaga)
   yield takeLatest(GRAPPLERS_REQUEST, grapplersSaga)
   yield takeLatest(GRAPPLER_REQUEST, grapplerSaga)
   yield takeLatest(CREATE_GRAPPLER_REQUEST, createGrapplerSaga)
@@ -24,31 +26,26 @@ export function* watcherSaga() {
 
 function* clipsSaga(action) {
   try {
-    const { grapplerId } = action
+    const { grapplerId, page } = action
     const fetchClips = (grapplerId)
-      ? () => axios({ method: 'get', url: `/grappler-clips/${grapplerId}/` })
-      : () => axios({ method: 'get', url: '/clips/' })
+      ? () => axios({ method: 'get', url: `/grappler-clips/${grapplerId}/?page=${page}` })
+      : () => axios({ method: 'get', url: `/clips/?page=${page}` })
 
     const response = yield call(fetchClips)
-    const list = response.data;
+    const list = response.data
     yield put(recieveClips(list))
   } catch (err) {
-    yield put({ type: CLIPS_FAILURE, err })
+    yield put(clipsFail(err))
   }
 }
 
 function* clipSaga(action) {
   try {
-    const response = yield call(
-      () => axios({
-        method: 'get',
-        url: action.url
-      })
-    )
-
-    console.log('resp', response)
+    const { id } = action
+    const response = yield call(() => axios({ method: 'get', url: `/clips/${id}/` }))
+    yield put(recieveClip(response.data))
   } catch (err) {
-    console.log('err', err)
+    yield put(clipFail(err))
   }
 }
 
@@ -150,5 +147,30 @@ function* deleteClipSaga(action) {
     yield put(push('/'))
   } catch (err) {
     yield put(deleteClipFailure(err))
+  }
+}
+
+function* updateClipSaga(action) {
+  try {
+    const { id, payload } = action
+    const data = new FormData()
+    for (const key in payload) {
+      if (payload[key]) {
+        data.append(key, payload[key])
+      }
+    }
+
+    const result = yield call(
+      () => axios({
+        method: 'patch',
+        url: `/clips/${id}/`,
+        data,
+      })
+    )
+    console.log('🍊', result)
+    yield put(updateClipSuccess(result.response))
+  } catch (err) {
+    console.log('🎯', err)
+    yield put(updateClipFailure(err))
   }
 }

@@ -92,6 +92,7 @@ body {
 
 .body {
   margin-left: 5rem;
+  padding-bottom: 5rem;
   max-width: 1000px;
 }
 
@@ -100,9 +101,19 @@ body {
   margin-top: 3rem;
 }
 
+.clip-list {
+  display: flex;
+  flex-flow: row wrap;
+}
 
-.clip__container {
+.clip-list__container {
+  background: white;
+  box-sizing: border-box;
   max-width: 450px;
+  margin: .5rem;
+  min-width: 100px;
+  flex: 1 1 calc(33% - 1rem)%;
+  padding: .5rem .5rem 1rem;
 }
 
 .clip__video {
@@ -123,7 +134,7 @@ a, a:visited, a:active {
   height: 100px;
   margin: 20px;
   display:inline-block;
-  fill: var(--secondary);
+  fill: var(--dark);
 }
 
 .big-list {
@@ -172,6 +183,17 @@ a, a:visited, a:active {
   color: var(--dark);
 }
 
+.input {
+  box-shadow: none !important;
+  background-color: transparent !important;
+  border-radius: 0 !important;
+  border: 0 !important;
+  border-bottom: 2px solid var(--dark) !important;
+  color: var(--dark) !important;
+  display: block;
+  width: 100%;
+}
+
 .Select-control {
   box-shadow: none !important;
   background-color: transparent !important;
@@ -209,4 +231,25 @@ a, a:visited, a:active {
 .label--file:hover {
     color: var(--primary);
     background: var(--dark);
+}
+
+.clip {
+  background: #fff;
+  padding: 1rem;
+}
+
+.clip__info {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  font-size: 1.25rem;
+}
+
+.clip__info--editing {
+  max-width: 450px;
+  flex-direction: column;
+}
+
+.clip__meta {
+  flex: 1 1 auto;
 }

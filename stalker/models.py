@@ -23,5 +23,6 @@ class Grappler(models.Model):
 
 class Clip(models.Model):
     grappler = models.ForeignKey(Grappler)
+    opponenent = models.CharField(max_length=250, default='')
     video = models.FileField(upload_to='uploads/')
     tags = TaggableManager(blank=True)

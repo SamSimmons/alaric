@@ -1,9 +1,14 @@
 from stalker.models import Grappler, Clip
-from rest_framework import viewsets
+from rest_framework import viewsets, generics
 from rest_framework.views import APIView
-from rest_framework import generics
 from api.serializers import GrapplerSerializer, ClipSerializer
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
+
+
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 12
+    page_size_query_param = 'page_size'
 
 class GrapplerViewSet(viewsets.ModelViewSet):
     """
@@ -12,13 +17,13 @@ class GrapplerViewSet(viewsets.ModelViewSet):
     queryset = Grappler.objects.all()
     serializer_class = GrapplerSerializer
 
-
 class ClipViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows clips to be viewed or edited
     """
     queryset = Clip.objects.all()
     serializer_class = ClipSerializer
+    pagination_class = StandardResultsSetPagination
 
     def create(self, request):
         last = int(request.data['videos[length]'])
@@ -31,6 +36,7 @@ class ClipViewSet(viewsets.ModelViewSet):
 
 class GrapplerClipsList(generics.ListAPIView):
     serializer_class = ClipSerializer
+    pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
         """

@@ -28,17 +28,23 @@ export const GRAPPLER_SUCCESS  = 'GRAPPLER_SUCCESS'
 export const GRAPPLER_FAILURE  = 'GRAPPLER_FAILURE'
 export const CLEAR_GRAPPLER = 'CLEAR_GRAPPLER'
 
-export function getClips(grapplerId) {
+export const UPDATE_CLIP_REQUEST  = 'UPDATE_CLIP_REQUEST'
+export const UPDATE_CLIP_SUCCESS  = 'UPDATE_CLIP_SUCCESS'
+export const UPDATE_CLIP_FAILURE  = 'UPDATE_CLIP_FAILURE'
+
+
+export function getClips(grapplerId, page) {
   return {
     type: CLIPS_REQUEST,
-    grapplerId
+    grapplerId,
+    page
   }
 }
 
-export function recieveClips(list) {
+export function recieveClips(payload) {
   return {
     type: CLIPS_SUCCESS,
-    list,
+    payload,
   }
 }
 
@@ -49,16 +55,17 @@ export function clipsFail(err) {
   }
 }
 
-export function getClip(url) {
+export function getClip(id) {
   return {
     type: CLIP_REQUEST,
-    url
+    id,
   }
 }
 
-export function recieveClip() {
+export function recieveClip(payload) {
   return {
     type: CLIP_SUCCESS,
+    payload,
   }
 }
 
@@ -164,5 +171,27 @@ export function grapplerFail(err) {
 export function clearGrappler() {
   return {
     type: CLEAR_GRAPPLER
+  }
+}
+
+export function updateClip(id, payload) {
+  return {
+    type: UPDATE_CLIP_REQUEST,
+    id,
+    payload,
+  }
+}
+
+export function updateClipSuccess(payload) {
+  return {
+    type: UPDATE_CLIP_SUCCESS,
+    payload
+  }
+}
+
+export function updateClipFailure(err) {
+  return {
+    type: UPDATE_CLIP_FAILURE,
+    err
   }
 }
