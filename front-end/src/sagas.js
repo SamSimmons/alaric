@@ -167,10 +167,8 @@ function* updateClipSaga(action) {
         data,
       })
     )
-    console.log('🍊', result)
-    yield put(updateClipSuccess(result.response))
+    yield put(updateClipSuccess(result.data))
   } catch (err) {
-    console.log('🎯', err)
     yield put(updateClipFailure(err))
   }
 }

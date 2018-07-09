@@ -1,13 +1,13 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
+import { withRouter, Link } from 'react-router-dom'
 import { getClip, deleteClip, getGrapplers, updateClip } from '../actions'
 import Loader from './Loader'
 import Heart from './Icons/Heart'
 import DropdownMenu from './DropdownMenu'
 import Select from 'react-select'
 import { tagOptions } from '../constants'
-import { find } from 'lodash'
+import { find, get, isEqual } from 'lodash'
 
 class Clip extends Component {
   state = {
@@ -16,18 +16,21 @@ class Clip extends Component {
     opponent: '',
     grappler: null,
     tags: [],
+    createdOption: null,
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.clip && !prevState.grappler) {
-      return {
-        grappler: nextProps.clip.grappler,
-        opponent: nextProps.clip.opponent,
-        tags: nextProps.clip.tags
-      }
-    } else {
-      return null
+    let nextState = { ...prevState }
+    if (get(nextProps, 'clip.grappler') !== prevState.grappler) {
+        nextState.grappler = get(nextProps, 'clip.grappler')
     }
+    if (get(nextProps, 'clip.opponent') !== prevState.opponent) {
+        nextState.opponent = get(nextProps, 'clip.opponent')
+    }
+    if (isEqual(get(nextProps, 'clip.tags'), prevState.tags)) {
+      nextState.tags = get(nextProps, 'clip.tags')
+    }
+    return nextState
   }
 
   componentDidMount() {
@@ -72,15 +75,15 @@ class Clip extends Component {
       grappler,
       tags: JSON.stringify(tags.map(t => t.value))
     }
-
     updateClip(clip.id, data)
     this.setState({ editing: false })
   }
 
   getEditing() {
     const { clip, grapplers } = this.props
-    const { grappler, tags } = this.state
+    const { grappler, tags, createdOption } = this.state
     const selected = find(grapplers, ({ id }) => id === grappler)
+    const options = createdOption ? [createdOption].concat(tagOptions) : tagOptions
     return (
       <div className='clip__info clip__info--editing'>
         <div className="fieldset">
@@ -109,8 +112,13 @@ class Clip extends Component {
           <Select
             name="tags"
             value={tags}
-            options={tagOptions}
+            options={options}
             multi={true}
+            allowCreate
+            showNewOptionAtTop
+            onInputChange={(val) => {
+              this.setState({ createdOption: { label: val, value: val }})
+            }}
             onChange={(selected) => {
               this.setState({ tags: selected })
             }}
@@ -137,14 +145,19 @@ class Clip extends Component {
     }
 
     return (
-      <div className='clip'>
-        <video className="clip__video" src={clip.video} controls></video>
-        {
-          editing
-          ? this.getEditing()
-          : this.getInfo()
-        }
-      </div>
+      <Fragment>
+        <div className='clip'>
+          <video className="clip__video" src={clip.video} controls></video>
+          {
+            editing
+            ? this.getEditing()
+            : this.getInfo()
+          }
+        </div>
+        <div className="btn btn--link">
+          <Link to={`/${clip.grappler}/`} className="link">BACK</Link>
+        </div>
+      </Fragment>
     )
   }
 }

@@ -183,6 +183,11 @@ a, a:visited, a:active {
   color: var(--dark);
 }
 
+.btn--link {
+  display: inline-block;
+  margin-top: 4rem;
+}
+
 .input {
   box-shadow: none !important;
   background-color: transparent !important;

@@ -21,7 +21,6 @@ class ClipViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows clips to be viewed or edited
     """
-    queryset = Clip.objects.all()
     serializer_class = ClipSerializer
     pagination_class = StandardResultsSetPagination
 
@@ -34,6 +33,16 @@ class ClipViewSet(viewsets.ModelViewSet):
             clip = Clip.objects.create(grappler=grappler, tags=tags, video=video)
         return Response("ok")
 
+    def get_queryset(self):
+        queryset = Clip.objects.all()
+        tags = self.request.query_params.getlist('tag', None)
+        if tags is not None:
+            if "untagged" in tags:
+                return queryset.filter(tags=None)
+            for key in tags:
+                queryset = queryset.filter(tags__name__in=[key])
+        return queryset
+
 class GrapplerClipsList(generics.ListAPIView):
     serializer_class = ClipSerializer
     pagination_class = StandardResultsSetPagination
@@ -44,4 +53,4 @@ class GrapplerClipsList(generics.ListAPIView):
         the grappler as determined by the grappler_id portion of the URL.
         """
         grappler = self.kwargs['grappler_id']
-        return Clip.objects.filter(grappler=grappler)
+        return Clip.objects.filter(grappler=grappler).prefetch_related('tags')

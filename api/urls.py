@@ -7,7 +7,7 @@ from api.views import GrapplerViewSet, ClipViewSet, GrapplerClipsList
 
 router = routers.DefaultRouter()
 router.register(r'grapplers', GrapplerViewSet)
-router.register(r'clips', ClipViewSet)
+router.register(r'clips', ClipViewSet, 'clip-detail')
 
 urlpatterns = [
     url('^grappler-clips/(?P<grappler_id>.+)/$', GrapplerClipsList.as_view()),

@@ -2,6 +2,7 @@ import queryString from 'query-string'
 import {
   CLIPS_REQUEST, CLIPS_SUCCESS, CLIPS_FAILURE,
   CLIP_REQUEST, CLIP_SUCCESS, CLIP_FAILURE,
+  UPDATE_CLIP_SUCCESS,
 } from '../actions'
 
 const initialState = {
@@ -63,6 +64,12 @@ export default function (state = initialState, action) {
         ...state,
         loading: false,
         selected: "err"
+      }
+    }
+    case UPDATE_CLIP_SUCCESS: {
+      return {
+        ...state,
+        selected: action.payload
       }
     }
     default: {
