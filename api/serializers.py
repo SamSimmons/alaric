@@ -1,6 +1,7 @@
 from stalker.models import Grappler, Clip
 from rest_framework import serializers
 from taggit_serializer.serializers import (TagListSerializerField, TaggitSerializer)
+from taggit.models import TagBase
 
 class GrapplerSerializer(serializers.HyperlinkedModelSerializer):
 
@@ -30,3 +31,7 @@ class FileListSerializer (serializers.Serializer ) :
         for video in video_list:
             photo=Photo.objects.create(image=img,blogs=blogs,**validated_data)
         return pho
+
+class TagSerializer(serializers.Serializer):
+    name = serializers.CharField(read_only=True)
+    num_times = serializers.IntegerField(read_only=True)

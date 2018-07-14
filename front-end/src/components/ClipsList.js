@@ -8,7 +8,7 @@ class AllClips extends Component {
 
   componentDidMount() {
     const { getClips, getGrapplers, grapplers, nextPage, selectedGrappler } = this.props
-    getClips(selectedGrappler, nextPage)
+    getClips({ grappler: get(selectedGrappler, 'id', 'All'), page: nextPage })
     if (!grapplers.length) {
       getGrapplers()
     }
@@ -16,7 +16,7 @@ class AllClips extends Component {
 
   getNextPage = () => {
     const { getClips, nextPage } = this.props
-    getClips(null, nextPage)
+    getClips({ page: nextPage })
   }
 
   render() {
@@ -27,7 +27,7 @@ class AllClips extends Component {
         {list.map(
           (clip) =>
           <Link className="clip-list__container" key={clip.video} to={`/${clip.grappler}/clip/${clip.id}/`}>
-            <video className="clip__video" src={clip.video} controls={false} />
+            <img className="clip__thumbnail" src={clip.thumbnail} alt="clip preview" />
             <div>{find(grapplers, ({ id }) => clip.grappler === id).name}</div>
             <div>{clip.opponent}</div>
             <div>
@@ -39,7 +39,7 @@ class AllClips extends Component {
         )}
         {
           nextPage
-          ? <button onClick={this.getNextPage}>Load more</button>
+          ? <button onClick={this.getNextPage} className="btn">Load more</button>
           : null
         }
       </div>
@@ -59,7 +59,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getClips: (grappler, page) => dispatch(getClips(grappler, page)),
+    getClips: (params) => dispatch(getClips(params)),
     getGrapplers: () => dispatch(getGrapplers()),
   }
 }

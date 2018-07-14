@@ -13,6 +13,9 @@ const Home = () => {
       <div>
         <Link to="/upload/" className="big-link">Upload</Link>
       </div>
+      <div>
+        <Link to="/create-playlist/" className="big-link">Create Playlist</Link>
+      </div>
     </div>
   )
 }

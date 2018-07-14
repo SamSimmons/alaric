@@ -43,7 +43,7 @@ class Clip extends Component {
   }
 
   getInfo() {
-    const { clip } = this.props
+    const { clip, deleteClip } = this.props
     const { liked } = this.state
 
     return (
@@ -60,7 +60,7 @@ class Clip extends Component {
         <DropdownMenu
           options={[
             { label: "Edit", action: () => this.setState({ editing: true }) },
-            { label: "Delete", action: () => console.log("delete") }
+            { label: "Delete", action: () =>  deleteClip(clip.id) }
           ]}
         />
       </div>

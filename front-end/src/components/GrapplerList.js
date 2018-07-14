@@ -14,7 +14,7 @@ class GrapplerList extends Component {
   render () {
     const { grapplers } = this.props
     return (
-      <div className="body grappler-list">
+      <div className="grappler-list">
         <Link to="/create/" className="big-link grappler grappler--create">
           <div>Add a Grappler</div>
         </Link>

@@ -15,6 +15,10 @@ export const UPLOAD_SUCCESS = 'UPLOAD_SUCCESS'
 export const UPLOAD_FAILURE = 'UPLOAD_FAILURE'
 export const UPLOAD_PROGRESS = 'UPLOAD_PROGRESS'
 
+export const GET_TAGS_REQUEST = 'GET_TAGS_REQUEST'
+export const GET_TAGS_SUCCESS = 'GET_TAGS_SUCCESS'
+export const GET_TAGS_FAILURE = 'GET_TAGS_FAILURE'
+
 export const GRAPPLERS_REQUEST  = 'GRAPPLERS_REQUEST'
 export const GRAPPLERS_SUCCESS  = 'GRAPPLERS_SUCCESS'
 export const GRAPPLERS_FAILURE  = 'GRAPPLERS_FAILURE'
@@ -32,12 +36,13 @@ export const UPDATE_CLIP_REQUEST  = 'UPDATE_CLIP_REQUEST'
 export const UPDATE_CLIP_SUCCESS  = 'UPDATE_CLIP_SUCCESS'
 export const UPDATE_CLIP_FAILURE  = 'UPDATE_CLIP_FAILURE'
 
+export const UPDATE_GRAPPLER_FILTER = 'UPDATE_GRAPPLER_FILTER'
+export const UPDATE_TAG_FILTER = 'UPDATE_TAG_FILTER'
 
-export function getClips(grapplerId, page) {
+export function getClips(params) {
   return {
     type: CLIPS_REQUEST,
-    grapplerId,
-    page
+    params
   }
 }
 
@@ -108,6 +113,27 @@ export function deleteClipSuccess() {
 export function deleteClipFailure(err) {
   return {
     type: DELETE_CLIP_FAILURE,
+    err,
+  }
+}
+
+export function getTags(params = '') {
+  return {
+    type: GET_TAGS_REQUEST,
+    params,
+  }
+}
+
+export function getTagsSuccess(tags) {
+  return {
+    type: GET_TAGS_SUCCESS,
+    tags,
+  }
+}
+
+export function getTagsFailure(err) {
+  return {
+    type: GET_TAGS_FAILURE,
     err,
   }
 }
@@ -193,5 +219,19 @@ export function updateClipFailure(err) {
   return {
     type: UPDATE_CLIP_FAILURE,
     err
+  }
+}
+
+export function updateGrapplerFilter(selected) {
+  return {
+    type: UPDATE_GRAPPLER_FILTER,
+    selected,
+  }
+}
+
+export function updateTagFilter(tag) {
+  return {
+    type: UPDATE_TAG_FILTER,
+    tag,
   }
 }

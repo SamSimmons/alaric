@@ -8,7 +8,7 @@ class AllClips extends Component {
 
   componentDidMount() {
     const { getClips, getGrapplers, grapplers, nextPage } = this.props
-    getClips(null, nextPage)
+    getClips({ page: nextPage })
     if (!grapplers.length) {
       getGrapplers()
     }
@@ -16,7 +16,7 @@ class AllClips extends Component {
 
   getNextPage = () => {
     const { getClips, nextPage } = this.props
-    getClips(null, nextPage)
+    getClips({ page: nextPage })
   }
 
   render() {
@@ -39,7 +39,7 @@ class AllClips extends Component {
         )}
         {
           nextPage
-          ? <button onClick={this.getNextPage}>Load more</button>
+          ? <button onClick={this.getNextPage} className="btn">Load more</button>
           : null
         }
       </div>
@@ -58,7 +58,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getClips: (grappler, page) => dispatch(getClips(grappler, page)),
+    getClips: (params) => dispatch(getClips(params)),
     getGrapplers: () => dispatch(getGrapplers()),
   }
 }

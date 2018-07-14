@@ -3,6 +3,7 @@ import {
   CLIPS_REQUEST, CLIPS_SUCCESS, CLIPS_FAILURE,
   CLIP_REQUEST, CLIP_SUCCESS, CLIP_FAILURE,
   UPDATE_CLIP_SUCCESS,
+  UPDATE_GRAPPLER_FILTER, UPDATE_TAG_FILTER,
 } from '../actions'
 
 const initialState = {
@@ -15,6 +16,13 @@ const initialState = {
 
 export default function (state = initialState, action) {
   switch(action.type) {
+    case '@@router/LOCATION_CHANGE': {
+      return {
+        ...state,
+        list: [],
+        nextPage: 1,
+      }
+    }
     case CLIPS_REQUEST: {
       return {
         ...state,
@@ -70,6 +78,13 @@ export default function (state = initialState, action) {
       return {
         ...state,
         selected: action.payload
+      }
+    }
+    case UPDATE_TAG_FILTER:
+    case UPDATE_GRAPPLER_FILTER: {
+      return {
+        ...state,
+        nextPage: 1,
       }
     }
     default: {

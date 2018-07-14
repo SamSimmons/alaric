@@ -230,6 +230,8 @@ pip-selfcheck.json
 
 .pytest_cache/
 
+dump.rdb
+
 
 media/
 

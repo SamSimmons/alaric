@@ -2,14 +2,11 @@ import React from 'react';
 
 const Profile = (props) => {
 
-  const { name, clips } = props;
+  const { name, total } = props;
 
   return (
     <div className="profile">
-      <div>
-        <div className="sub-head">{name}</div>
-        <div>{clips} clips</div>
-      </div>
+      <div className="sub-head">{name} — {total} clips</div>
     </div>
   )
 }

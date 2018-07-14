@@ -12,7 +12,7 @@ class Grappler extends Component {
     if (!grappler) {
       getGrappler(id)
     }
-    getClips(id, nextPage)
+    getClips({ grappler: id, page: nextPage })
   }
 
   componentWillUnmount() {
@@ -21,10 +21,10 @@ class Grappler extends Component {
   }
 
   render () {
-    const { grappler } = this.props
+    const { grappler, total } = this.props
     return (
-      <div className="body">
-        <Profile {...grappler} />
+      <div>
+        <Profile {...grappler} total={total} />
         <ClipsList />
       </div>
     )
@@ -38,13 +38,14 @@ const mapStateToProps = (state, ownProps) => {
     grappler: state.grapplers.selected,
     clips: state.clips.list,
     loading: (state.grapplers.loading || state.clips.loading),
-    nextPage: state.clips.nextPage
+    nextPage: state.clips.nextPage,
+    total: state.clips.total,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getClips: (id, page) => dispatch(getClips(id, page)),
+    getClips: (params) => dispatch(getClips(params)),
     getGrappler: (id) => dispatch(getGrappler(id)),
     clearGrappler: () => dispatch(clearGrappler()),
   }

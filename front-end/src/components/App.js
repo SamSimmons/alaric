@@ -3,6 +3,7 @@ import Header from './Header'
 import Grappler from './Grappler'
 import GrapplerList from './GrapplerList'
 import CreateGrappler from './CreateGrappler'
+import CreatePlaylist from './CreatePlaylist'
 import Clip from './Clip'
 import ClipsList from './ClipsList'
 import Home from './Home'
@@ -12,7 +13,6 @@ import { withRouter } from 'react-router'
 
 
 class App extends Component {
-
 
   render() {
 
@@ -25,7 +25,8 @@ class App extends Component {
             <Route path="/:grappler/clip/:id/" component={Clip} />
             <Route path="/upload/" component={Upload} />
             <Route path="/create/" component={CreateGrappler} />
-            <Route path="/grapplers" component={GrapplerList} />
+            <Route path="/grapplers/" component={GrapplerList} />
+            <Route path="/create-playlist/" component={CreatePlaylist} />
             <Route path="/clips/" component={ClipsList} />
             <Route path="/:grappler/" component={Grappler} />
             <Route exact path="/" component={Home} />
