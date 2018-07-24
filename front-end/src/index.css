@@ -109,6 +109,7 @@ body {
 .clip-list {
   display: flex;
   flex-flow: row wrap;
+  align-content: flex-start;
 }
 
 .clip-list__container {

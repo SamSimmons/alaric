@@ -12,7 +12,7 @@ class Filter extends Component {
   }
 
   render() {
-    const { grapplers, tags, selectedGrappler, updateGrapplerFilter, updateTagFilter } = this.props
+    const { grapplers, tags, untagged, selectedGrappler, updateGrapplerFilter, updateTagFilter } = this.props
     return (
       <div>
         <div>Grapplers</div>
@@ -49,6 +49,18 @@ class Filter extends Component {
             )
           }
         </div>
+        <div>Untagged</div>
+        <div>
+          <div style={{ display: 'flex' }}>
+            <input
+              type='checkbox'
+              id="untagged"
+              checked={untagged}
+              onChange={(e) => updateTagFilter('untagged')}
+            />
+            <label htmlFor='untagged'>Untagged</label>
+          </div>
+        </div>
       </div>
     )
   }
@@ -59,6 +71,7 @@ const mapStateToProps = (state) => {
     tags: state.filters.tags,
     grapplers: state.grapplers.list,
     selectedGrappler: state.filters.grappler,
+    untagged: state.filters.untagged,
   }
 }
 

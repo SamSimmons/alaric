@@ -21,11 +21,11 @@ class Grappler extends Component {
   }
 
   render () {
-    const { grappler, total } = this.props
+    const { grappler, total, id } = this.props
     return (
       <div>
         <Profile {...grappler} total={total} />
-        <ClipsList />
+        <ClipsList params={{ grappler: id }} />
       </div>
     )
   }

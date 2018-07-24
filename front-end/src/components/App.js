@@ -22,13 +22,13 @@ class App extends Component {
         <div className='divider' />
         <div className='body'>
           <Switch>
-            <Route path="/:grappler/clip/:id/" component={Clip} />
+            <Route path="/clip/:id/" component={Clip} />
             <Route path="/upload/" component={Upload} />
             <Route path="/create/" component={CreateGrappler} />
+            <Route path="/grapplers/:grappler/" component={Grappler} />
             <Route path="/grapplers/" component={GrapplerList} />
             <Route path="/create-playlist/" component={CreatePlaylist} />
             <Route path="/clips/" component={ClipsList} />
-            <Route path="/:grappler/" component={Grappler} />
             <Route exact path="/" component={Home} />
           </Switch>
         </div>

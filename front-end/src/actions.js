@@ -39,6 +39,9 @@ export const UPDATE_CLIP_FAILURE  = 'UPDATE_CLIP_FAILURE'
 export const UPDATE_GRAPPLER_FILTER = 'UPDATE_GRAPPLER_FILTER'
 export const UPDATE_TAG_FILTER = 'UPDATE_TAG_FILTER'
 
+export const ADD_TO_PLAYLIST = 'ADD_TO_PLAYLIST'
+export const REMOVE_FROM_PLAYLIST = 'REMOVE_FROM_PLAYLIST'
+
 export function getClips(params) {
   return {
     type: CLIPS_REQUEST,
@@ -233,5 +236,19 @@ export function updateTagFilter(tag) {
   return {
     type: UPDATE_TAG_FILTER,
     tag,
+  }
+}
+
+export function addToPlaylist(clips) {
+  return {
+    type: ADD_TO_PLAYLIST,
+    clips
+  }
+}
+
+export function removeFromPlaylist(clips) {
+  return {
+    type: REMOVE_FROM_PLAYLIST,
+    clips
   }
 }

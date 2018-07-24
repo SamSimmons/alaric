@@ -21,7 +21,7 @@ class GrapplerList extends Component {
         {
           grapplers.map(({ id, name, avatar }) => {
             return (
-              <Link to={`/${id}/`} key={`grappler-${id}`} className="big-link grappler">
+              <Link to={`/grapplers/${id}/`} key={`grappler-${id}`} className="big-link grappler">
                 <div className='name'>{name}</div>
               </Link>
             )

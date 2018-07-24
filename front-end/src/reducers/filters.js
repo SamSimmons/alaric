@@ -2,9 +2,8 @@ import {
   GET_TAGS_REQUEST, GET_TAGS_SUCCESS, GET_TAGS_FAILURE,
   UPDATE_GRAPPLER_FILTER, UPDATE_TAG_FILTER,
 } from '../actions'
-import { includes } from 'lodash'
 
-export default function(state = { tags: [], selectedTags: [], grappler: 'All', status: 'ok' }, action) {
+export default function(state = { tags: [], selectedTags: [], grappler: 'All', untagged: false, status: 'ok' }, action) {
   switch (action.type) {
     case GET_TAGS_REQUEST: {
       return {
@@ -39,16 +38,27 @@ export default function(state = { tags: [], selectedTags: [], grappler: 'All', s
     case UPDATE_TAG_FILTER: {
       const { tag } = action
       const updatedTags = state.tags.map((t) => {
+        if (tag === "untagged") {
+          return { ...t, checked: false }
+        }
         if (t.name === tag) {
           return { ...t, checked: !t.checked }
         }
         return t
       })
-      const selectedTags = includes(state.selectedTags, tag) ? state.selectedTags.filter((t) => t !== tag) : state.selectedTags.concat(tag)
+      let selectedTags = updatedTags.filter((t) => t.checked).map((t) => t.name)
+
+      if (tag === "untagged" && !state.untagged) {
+        selectedTags = ["untagged"]
+      }
+
+      let untagged = (tag === "untagged" && !state.untagged) ? true : false
+
       return {
         ...state,
         tags: updatedTags,
         selectedTags,
+        untagged,
       }
     }
     default: {
