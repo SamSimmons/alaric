@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import { getGrapplers, uploadRequest } from '../actions'
 import Select from 'react-select'
 import { Link } from 'react-router-dom'
-import 'react-select/dist/react-select.css'
 import { tagOptions } from '../constants'
 
 class Upload extends Component {

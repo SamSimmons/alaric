@@ -19,6 +19,10 @@ export const GET_TAGS_REQUEST = 'GET_TAGS_REQUEST'
 export const GET_TAGS_SUCCESS = 'GET_TAGS_SUCCESS'
 export const GET_TAGS_FAILURE = 'GET_TAGS_FAILURE'
 
+export const OPPONENTS_REQUEST = 'OPPONENTS_REQUEST'
+export const OPPONENTS_SUCCESS = 'OPPONENTS_SUCCESS'
+export const OPPONENTS_FAILURE = 'OPPONENTS_FAILURE'
+
 export const GRAPPLERS_REQUEST  = 'GRAPPLERS_REQUEST'
 export const GRAPPLERS_SUCCESS  = 'GRAPPLERS_SUCCESS'
 export const GRAPPLERS_FAILURE  = 'GRAPPLERS_FAILURE'
@@ -174,6 +178,26 @@ export function recieveGrapplers(list) {
 export function grapplersFail(err) {
   return {
     type: GRAPPLERS_FAILURE,
+    err,
+  }
+}
+
+export function getOpponents() {
+  return {
+    type: OPPONENTS_REQUEST,
+  }
+}
+
+export function opponentsSuccess(payload) {
+  return {
+    type: OPPONENTS_SUCCESS,
+    payload,
+  }
+}
+
+export function opponentsFail(err) {
+  return {
+    type: OPPONENTS_FAILURE,
     err,
   }
 }

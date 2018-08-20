@@ -206,6 +206,10 @@ a, a:visited, a:active {
   border-bottom: 2px solid var(--dark) !important;
   color: var(--dark) !important;
   display: block;
+  font-family: 'GT-America', serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  padding-bottom: .25rem;
   width: 100%;
 }
 

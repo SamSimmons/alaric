@@ -10,6 +10,7 @@ import {
   UPDATE_CLIP_REQUEST, updateClipSuccess, updateClipFailure,
   GET_TAGS_REQUEST, getTagsSuccess, getTagsFailure,
   UPDATE_GRAPPLER_FILTER, UPDATE_TAG_FILTER,
+  OPPONENTS_REQUEST, opponentsSuccess, opponentsFail,
 } from './actions'
 import { push } from 'connected-react-router'
 import axios from 'axios'
@@ -28,6 +29,7 @@ export function* watcherSaga() {
   yield takeLatest(GET_TAGS_REQUEST, getTagsSaga)
   yield takeLatest(UPDATE_GRAPPLER_FILTER, getFilteredClipsSaga)
   yield takeLatest(UPDATE_TAG_FILTER, getFilteredClipsSaga)
+  yield takeLatest(OPPONENTS_REQUEST, getOpponentsSaga)
 }
 
 function* clipSaga(action) {
@@ -173,6 +175,17 @@ function* getTagsSaga(action) {
     yield put(getTagsSuccess(response.data))
   } catch (err) {
     yield put(getTagsFailure(err))
+  }
+}
+
+function* getOpponentsSaga(action) {
+  try {
+    const response = yield call(
+      () => axios.get(`/opponents/`)
+    )
+    yield put(opponentsSuccess(response.data))
+  } catch (err) {
+    yield put(opponentsFail(err))
   }
 }
 

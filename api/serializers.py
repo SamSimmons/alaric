@@ -39,3 +39,6 @@ class FileListSerializer (serializers.Serializer ) :
 class TagSerializer(serializers.Serializer):
     name = serializers.CharField(read_only=True)
     num_times = serializers.IntegerField(read_only=True)
+
+class OpponentSerializer(serializers.Serializer):
+    opponent = serializers.CharField(read_only=True)

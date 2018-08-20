@@ -1,13 +1,16 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import { getClip, deleteClip, getGrapplers, updateClip } from '../../actions'
+import { getClip, deleteClip, getGrapplers, updateClip, getOpponents } from '../../actions'
 import Loader from '../Loader'
 import Heart from '../Icons/Heart'
 import DropdownMenu from '../DropdownMenu'
 import Select from 'react-select'
+import Creatable from 'react-select/lib/Creatable';
 import { tagOptions } from '../../constants'
 import { find, get, uniqBy } from 'lodash'
+
+ const createSelectValue = (val) => ({ value: val, label: val })
 
 class Clip extends Component {
   state = {
@@ -25,13 +28,13 @@ class Clip extends Component {
     }
     const { id } = this.props.match.params
     if (+id !== get(this.props.clip, 'id') && !this.props.loading) {
-      const { id } = this.props.match.params
-      const { getClip, grapplers, getGrapplers } = this.props
+      const { getClip } = this.props
       getClip(id)
     }
     if (get(prevProps, 'clip.id') !== get(this.props, 'clip.id')) {
       this.setState({
-        tags: get(this.props.clip, 'tags', []),
+        tags: get(this.props.clip, 'tags', []).map(createSelectValue),
+        opponent: createSelectValue(get(this.props.clip, 'opponent', '')),
         grappler: get(this.props.clip, 'grappler', ''),
       })
     }
@@ -39,8 +42,9 @@ class Clip extends Component {
 
   componentDidMount() {
     const { id } = this.props.match.params
-    const { getClip, grapplers, getGrapplers } = this.props
+    const { getClip, grapplers, getGrapplers, getOpponents } = this.props
     getClip(id)
+    getOpponents()
     if (grapplers.length === 0) {
       getGrapplers()
     }
@@ -78,21 +82,19 @@ class Clip extends Component {
     const { updateClip, clip } = this.props
     const { opponent, grappler, tags } = this.state
     let data = {
-      opponent,
+      opponent: opponent.value,
       grappler,
-      tags: JSON.stringify(tags.map(t => t.value))
+      tags: JSON.stringify(tags.map((t) => t.value)),
     }
     updateClip(clip.id, data)
     this.setState({ editing: false })
   }
 
   getEditing() {
-    const { clip, grapplers } = this.props
+    const { grapplers, opponents } = this.props
     const { grappler, tags, createdOption } = this.state
     const selected = find(grapplers, ({ id }) => id === grappler)
-    const includeCurrentTags = uniqBy(tags.map((t) => ({ label: t, value: t })).concat(tagOptions), 'value')
-    const options = createdOption ? [createdOption].concat(includeCurrentTags) : includeCurrentTags
-
+    console.log('🚢', tagOptions)
     return (
       <div className='clip__info clip__info--editing'>
         <div className="fieldset">
@@ -109,29 +111,25 @@ class Clip extends Component {
         </div>
         <div className="fieldset">
           <label className="label section-title" htmlFor="opponent">Opponent</label>
-          <input
-            id="opponent"
-            className="input"
-            value={clip.opponent}
-            onChange={(e) => this.setState({ opponent: e.target.value })}
+          <Creatable
+            name="opponent"
+            isClearable
+            value={this.state.opponent}
+            options={opponents.map(createSelectValue)}
+            onChange={(opponent) => {
+              this.setState({ opponent })
+            }}
           />
         </div>
         <div className="fieldset">
           <label className="label section-title" htmlFor="tags">Tags</label>
-          <Select
+          <Creatable
             name="tags"
             value={tags}
-            options={options}
-            multi={true}
-            allowCreate
-            showNewOptionAtTop
-            onInputChange={(val) => {
-              if (val) {
-                this.setState({ createdOption: { label: val, value: val }})
-              }
-            }}
+            options={tagOptions}
+            isMulti
             onChange={(selected) => {
-              this.setState({ tags: selected.map(t => t.value) })
+              this.setState({ tags: selected })
             }}
           />
         </div>
@@ -181,6 +179,7 @@ const mapStateToProps = (state) => {
     clip: state.clips.selected,
     loading: state.clips.loading,
     grapplers: state.grapplers.list,
+    opponents: state.opponents.list,
   }
 }
 
@@ -190,6 +189,7 @@ const mapDispatchToProps = (dispatch) => {
     deleteClip: (id) => dispatch(deleteClip(id)),
     updateClip: (id, data) => dispatch(updateClip(id, data)),
     getGrapplers: () => dispatch(getGrapplers()),
+    getOpponents: () => dispatch(getOpponents()),
   }
 }
 

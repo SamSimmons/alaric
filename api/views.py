@@ -1,7 +1,7 @@
 from stalker.models import Grappler, Clip
 from rest_framework import viewsets, generics
 from rest_framework.views import APIView
-from api.serializers import GrapplerSerializer, ClipSerializer, TagSerializer
+from api.serializers import GrapplerSerializer, ClipSerializer, TagSerializer, OpponentSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
@@ -37,6 +37,7 @@ class ClipViewSet(viewsets.ModelViewSet):
             clip = Clip.objects.create(grappler=grappler, tags=tags, video=video)
             create_thumbnail.delay(clip.id)
         return Response("ok")
+
 
     def retrieve(self, request, pk=None):
         print("add to filter list", pk)
@@ -83,3 +84,10 @@ class TagList(generics.ListAPIView):
     def get_queryset(self):
         tags = Clip.tags.most_common()
         return tags
+
+class OpponentList(generics.ListAPIView):
+    serializer_class = OpponentSerializer
+
+    def get_queryset(self):
+        opponents = Clip.objects.all().values('opponent').distinct()
+        return opponents

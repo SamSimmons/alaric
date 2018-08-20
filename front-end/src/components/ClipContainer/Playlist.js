@@ -14,7 +14,7 @@ class Playlist extends Component {
   }
 
   componentDidUpdate(oldProps) {
-    if (get(oldProps.clip, 'id') !== get(this.props.clip, 'id')) {
+    if (get(oldProps.clip, 'id') !== get(this.props.clip, 'id') && !this.props.loading) {
       const { getClips } = this.props
       getClips('&exclude_watched=true')
     }
