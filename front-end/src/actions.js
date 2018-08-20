@@ -42,6 +42,8 @@ export const UPDATE_TAG_FILTER = 'UPDATE_TAG_FILTER'
 export const ADD_TO_PLAYLIST = 'ADD_TO_PLAYLIST'
 export const REMOVE_FROM_PLAYLIST = 'REMOVE_FROM_PLAYLIST'
 
+export const SELECT_PROFILE_TAG = 'SELECT_PROFILE_TAG'
+
 export function getClips(params) {
   return {
     type: CLIPS_REQUEST,
@@ -250,5 +252,12 @@ export function removeFromPlaylist(clips) {
   return {
     type: REMOVE_FROM_PLAYLIST,
     clips
+  }
+}
+
+export function setProfileTag(tag) {
+  return {
+    type: SELECT_PROFILE_TAG,
+    tag,
   }
 }

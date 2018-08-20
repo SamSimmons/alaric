@@ -4,6 +4,7 @@ import {
   CLIP_REQUEST, CLIP_SUCCESS, CLIP_FAILURE,
   UPDATE_CLIP_SUCCESS,
   UPDATE_GRAPPLER_FILTER, UPDATE_TAG_FILTER,
+  SELECT_PROFILE_TAG,
 } from '../actions'
 
 const initialState = {
@@ -12,17 +13,11 @@ const initialState = {
   selected: null,
   total: null,
   nextPage: 1,
+  error: '',
 }
 
 export default function (state = initialState, action) {
   switch(action.type) {
-    case '@@router/LOCATION_CHANGE': {
-      return {
-        ...state,
-        list: [],
-        nextPage: 1,
-      }
-    }
     case CLIPS_REQUEST: {
       return {
         ...state,
@@ -37,18 +32,16 @@ export default function (state = initialState, action) {
         const { page } = queryString.parse(params)
         nextPage = page
       }
-      const list = state.nextPage > 1 ? state.list.concat(payload.results) : payload.results
 
       return {
         ...state,
-        list,
+        list: payload.results,
         total: payload.count,
         nextPage,
         loading: false
       }
     }
     case CLIPS_FAILURE: {
-      console.log('SHIT', action.err)
       return {
         ...state,
         loading: false,
@@ -58,13 +51,15 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: true,
+        error: '',
       }
     }
     case CLIP_SUCCESS: {
       return {
         ...state,
         loading: false,
-        selected: action.payload
+        selected: action.payload,
+        nextPage: 1,
       }
     }
     case CLIP_FAILURE: {
@@ -80,6 +75,7 @@ export default function (state = initialState, action) {
         selected: action.payload
       }
     }
+    case SELECT_PROFILE_TAG:
     case UPDATE_TAG_FILTER:
     case UPDATE_GRAPPLER_FILTER: {
       return {

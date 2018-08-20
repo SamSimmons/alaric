@@ -13,11 +13,15 @@ class GrapplerSerializer(serializers.HyperlinkedModelSerializer):
 class ClipSerializer(TaggitSerializer, serializers.ModelSerializer):
 
     tags = TagListSerializerField()
+    grappler_name = serializers.SerializerMethodField()
 
     class Meta:
         model = Clip
         # fields = ('grappler', 'video', 'tags')
         fields = '__all__'
+
+    def get_grappler_name(self, clip):
+        return clip.grappler.name
 
 class FileListSerializer (serializers.Serializer ) :
     image = serializers.ListField(

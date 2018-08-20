@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
-import Header from './Header'
+import Sidebar from './Sidebar/index'
 import Grappler from './Grappler'
-import GrapplerList from './GrapplerList'
 import CreateGrappler from './CreateGrappler'
-import CreatePlaylist from './CreatePlaylist'
-import Clip from './Clip'
+import ClipContainer from './ClipContainer'
 import ClipsList from './ClipsList'
 import Home from './Home'
 import Upload from './Upload'
@@ -17,17 +15,14 @@ class App extends Component {
   render() {
 
     return (
-      <div className="App">
-        <Header />
-        <div className='divider' />
-        <div className='body'>
+      <div className="app">
+        <Sidebar />
+        <div className='app__body'>
           <Switch>
-            <Route path="/clip/:id/" component={Clip} />
+            <Route path="/clip/:id/" component={ClipContainer} />
             <Route path="/upload/" component={Upload} />
             <Route path="/create/" component={CreateGrappler} />
             <Route path="/grapplers/:grappler/" component={Grappler} />
-            <Route path="/grapplers/" component={GrapplerList} />
-            <Route path="/create-playlist/" component={CreatePlaylist} />
             <Route path="/clips/" component={ClipsList} />
             <Route exact path="/" component={Home} />
           </Switch>

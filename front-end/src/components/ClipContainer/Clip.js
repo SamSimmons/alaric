@@ -1,13 +1,13 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import { getClip, deleteClip, getGrapplers, updateClip } from '../actions'
-import Loader from './Loader'
-import Heart from './Icons/Heart'
-import DropdownMenu from './DropdownMenu'
+import { getClip, deleteClip, getGrapplers, updateClip } from '../../actions'
+import Loader from '../Loader'
+import Heart from '../Icons/Heart'
+import DropdownMenu from '../DropdownMenu'
 import Select from 'react-select'
-import { tagOptions } from '../constants'
-import { find, get, isEqual, uniqBy } from 'lodash'
+import { tagOptions } from '../../constants'
+import { find, get, uniqBy } from 'lodash'
 
 class Clip extends Component {
   state = {
@@ -20,7 +20,16 @@ class Clip extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (!prevProps.clip && this.props.clip) {
+    if (this.props.clip === 'err') {
+      return
+    }
+    const { id } = this.props.match.params
+    if (+id !== get(this.props.clip, 'id') && !this.props.loading) {
+      const { id } = this.props.match.params
+      const { getClip, grapplers, getGrapplers } = this.props
+      getClip(id)
+    }
+    if (get(prevProps, 'clip.id') !== get(this.props, 'clip.id')) {
       this.setState({
         tags: get(this.props.clip, 'tags', []),
         grappler: get(this.props.clip, 'grappler', ''),
@@ -139,7 +148,13 @@ class Clip extends Component {
     const { editing } = this.state
 
     if (loading) {
-      return <Loader />
+      return (
+        <div className='clip'>
+          <div className='clip__video'>
+            <Loader />
+          </div>
+        </div>
+      )
     }
 
     if (!clip || clip === "err") {

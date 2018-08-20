@@ -3,6 +3,7 @@ from rest_framework import viewsets, generics
 from rest_framework.views import APIView
 from api.serializers import GrapplerSerializer, ClipSerializer, TagSerializer
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from stalker.tasks import create_thumbnail
 from taggit.models import Tag
@@ -37,10 +38,22 @@ class ClipViewSet(viewsets.ModelViewSet):
             create_thumbnail.delay(clip.id)
         return Response("ok")
 
+    def retrieve(self, request, pk=None):
+        print("add to filter list", pk)
+        if 'watched' not in request.session:
+            request.session['watched'] = [pk]
+        elif pk not in request.session['watched']:
+            request.session['watched'].append(pk)
+            request.session.modified = True
+
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+
     def get_queryset(self):
         queryset = Clip.objects.all()
         tags = self.request.query_params.getlist('tag', [])
-        if len(tags) > 0:
+        if len(tags) > 0 and "All"  not in tags:
             if "untagged" in tags:
                 return queryset.filter(tags=None)
             for key in tags:
@@ -50,19 +63,19 @@ class ClipViewSet(viewsets.ModelViewSet):
         if len(grapplers) > 0 and "All" not in grapplers:
             queryset = queryset.filter(grappler__in=grapplers)
 
+        exclude_watched = self.request.query_params.get('exclude_watched', '')
+        if 'watched' in self.request.session and exclude_watched == 'true':
+            watched = self.request.session['watched']
+            queryset = queryset.exclude(id__in=watched)
+
         return queryset
 
-class GrapplerClipsList(generics.ListAPIView):
-    serializer_class = ClipSerializer
-    pagination_class = StandardResultsSetPagination
-
-    def get_queryset(self):
-        """
-        This view should return a list of all the clips for
-        the grappler as determined by the grappler_id portion of the URL.
-        """
-        grappler = self.kwargs['grappler_id']
-        return Clip.objects.filter(grappler=grappler).prefetch_related('tags')
+    @action(detail=False)
+    def watched(self, request):
+        watched = request.session.get('watched', [])
+        queryset = Clip.objects.filter(pk__in=watched)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 class TagList(generics.ListAPIView):
     serializer_class = TagSerializer

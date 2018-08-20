@@ -8,13 +8,10 @@ const Home = () => {
         <Link to="/clips/" className="big-link">Clips</Link>
       </div>
       <div>
-        <Link to="/grapplers/" className="big-link">Profiles</Link>
-      </div>
-      <div>
         <Link to="/upload/" className="big-link">Upload</Link>
       </div>
       <div>
-        <Link to="/create-playlist/" className="big-link">Create Playlist</Link>
+        <Link to="/categories/" className="big-link">Categories</Link>
       </div>
     </div>
   )

@@ -1,0 +1,7 @@
+.sidebar {
+  padding: 3rem;
+}
+
+.sidebar__logo {
+  max-width: 350px;
+}

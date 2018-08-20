@@ -236,3 +236,5 @@ dump.rdb
 media/
 
 node_modules/
+
+*.bak

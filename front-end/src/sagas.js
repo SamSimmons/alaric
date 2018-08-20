@@ -17,7 +17,7 @@ import { find } from 'lodash'
 import { getQueryParams } from './utils'
 
 export function* watcherSaga() {
-  yield takeLatest(CLIPS_REQUEST, clipsSaga)
+  yield takeLatest(CLIPS_REQUEST, getFilteredClipsSaga)
   yield takeLatest(CLIP_REQUEST, clipSaga)
   yield takeEvery(UPLOAD_REQUEST, uploadSaga)
   yield takeEvery(DELETE_CLIP_REQUEST, deleteClipSaga)
@@ -28,18 +28,6 @@ export function* watcherSaga() {
   yield takeLatest(GET_TAGS_REQUEST, getTagsSaga)
   yield takeLatest(UPDATE_GRAPPLER_FILTER, getFilteredClipsSaga)
   yield takeLatest(UPDATE_TAG_FILTER, getFilteredClipsSaga)
-}
-
-function* clipsSaga(action) {
-  try {
-    const { params } = action
-
-    const response = yield call(() => axios({ method: 'get', url: `/clips/${getQueryParams(params)}` }))
-    const list = response.data
-    yield put(recieveClips(list))
-  } catch (err) {
-    yield put(clipsFail(err))
-  }
 }
 
 function* clipSaga(action) {
@@ -131,7 +119,7 @@ function* uploadSaga(action) {
       )
     )
     yield put(uploadSuccess(response))
-    yield put(push(`/${grappler.value}/`))
+    yield put(push(`/grapplers/${grappler.value}/`))
   } catch (err) {
     yield put(uploadFailure(err))
   }
@@ -192,7 +180,8 @@ function* getFilteredClipsSaga(action) {
   try {
     const { grappler, selectedTags } = yield select((state) => state.filters)
     const { nextPage } = yield select((state) => state.clips)
-    const params = getQueryParams({ grappler, tags: selectedTags, page: nextPage })
+    const extraParams = action.params
+    const params = getQueryParams({ grappler, tags: selectedTags, page: nextPage }, extraParams)
     const response = yield call(() => axios({ method: 'get', url: `/clips/${params}` }))
     const list = response.data
     yield put(recieveClips(list))

@@ -1,6 +1,7 @@
 
 :root {
-  --primary:#CBA104;
+  --primary: #CBA104;
+  --faded: hsla(48.3, 59%, 44.6%, .45);
   --dark: #4F4F4F;
   --light: #E0E0E0;
 }
@@ -50,6 +51,11 @@
   font-style: italic;
 }
 
+.app {
+  border-top: 15px solid var(--dark);
+  display: flex;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -81,22 +87,12 @@ body {
 
 .acronym { letter-spacing: .15em; }
 
-.header {
-  align-items: center;
-  border-top: 15px solid var(--dark);
-  display: flex;
-  min-height: 12rem;
-  justify-content: space-between;
-  padding: 0 5rem;
-}
-
 .sub-head {
   font-size: 2rem;
 }
 
-.body {
-  margin-left: 5rem;
-  padding-bottom: 5rem;
+.app__body {
+  padding: 3rem;
   max-width: 1000px;
 }
 
@@ -104,6 +100,8 @@ body {
   display: flex;
   margin-top: 3rem;
   margin-bottom: 3rem;
+  display: flex;
+  flex-flow: column;
 }
 
 .clip-list {
@@ -168,8 +166,8 @@ a, a:visited, a:active {
 .divider {
   background: var(--dark);
   height: 15px;
-  width: 200px;
-  margin: 0 5rem 4rem;
+  margin: 3rem 0;
+  width: 100%;
 }
 
 .upload-form {

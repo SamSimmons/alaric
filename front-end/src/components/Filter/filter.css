@@ -1,0 +1,27 @@
+.filter__label {
+  font-size: 1.35rem;
+  font-weight: 400;
+  margin-bottom: 1rem;
+}
+
+.filter__category {
+  margin-bottom: 2rem;
+}
+
+.expandable__category--expanded {
+  max-height: 400px;
+  overflow-y: scroll;
+}
+
+.filter-btn {
+  cursor: pointer;
+  display: flex;
+  fill: var(--dark);
+  margin-top: .5rem;
+  padding-left: 5px;
+  transition: fill .5s ease;
+}
+
+.filter-btn:hover {
+  fill: var(--primary);
+}
