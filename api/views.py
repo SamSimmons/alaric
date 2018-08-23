@@ -40,7 +40,6 @@ class ClipViewSet(viewsets.ModelViewSet):
 
 
     def retrieve(self, request, pk=None):
-        print("add to filter list", pk)
         if 'watched' not in request.session:
             request.session['watched'] = [pk]
         elif pk not in request.session['watched']:
@@ -63,6 +62,11 @@ class ClipViewSet(viewsets.ModelViewSet):
         grapplers = self.request.query_params.getlist('grappler', [])
         if len(grapplers) > 0 and "All" not in grapplers:
             queryset = queryset.filter(grappler__in=grapplers)
+
+        opponents = self.request.query_params.getlist('opponent', [])
+        if len(opponents) > 0:
+            print('---->', opponents)
+            queryset = queryset.filter(opponent__in=opponents)
 
         exclude_watched = self.request.query_params.get('exclude_watched', '')
         if 'watched' in self.request.session and exclude_watched == 'true':

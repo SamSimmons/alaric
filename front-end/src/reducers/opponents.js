@@ -11,7 +11,7 @@ export default function (state = { list: [] }, action) {
       }
     }
     case OPPONENTS_SUCCESS: {
-      let list = action.payload.map(o => o.opponent)
+      let list = action.payload.map(o => o.opponent).filter(o => o !== '')
       return {
         ...state,
         list,

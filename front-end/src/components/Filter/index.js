@@ -3,25 +3,26 @@ import Up from 'typicons.font/src/svg/arrow-sorted-up.svg'
 import Down from 'typicons.font/src/svg/arrow-sorted-down.svg'
 import './filter.css'
 import { connect } from 'react-redux'
-import { getTags, getGrapplers, updateGrapplerFilter, updateTagFilter } from '../../actions'
+import { getTags, updateGrapplerFilter, updateTagFilter, updateOpponentsFilter } from '../../actions'
 
 
 class Filter extends Component {
 
   state = {
     tagsCollapsed: true,
+    opponentsCollapsed: true,
   }
 
   componentDidMount() {
-    const { getTags, getGrapplers } = this.props
+    const { getTags } = this.props
     getTags()
-    getGrapplers()
   }
 
   render() {
-    const { grapplers, tags, untagged, selectedGrappler, updateGrapplerFilter, updateTagFilter } = this.props
-    const { tagsCollapsed } = this.state
+    const { grapplers, tags, untagged, opponents, selectedGrappler, updateGrapplerFilter, updateTagFilter, updateOpponentsFilter } = this.props
+    const { tagsCollapsed, opponentsCollapsed } = this.state
     const displayedTags = tagsCollapsed ? tags.slice(0, 5) : tags
+    const displayedOpponents = opponentsCollapsed ? opponents.slice(0, 5) : opponents
     return (
       <div>
         <div className='filter__category'>
@@ -68,6 +69,27 @@ class Filter extends Component {
           }
         </div>
         <div className='filter__category'>
+          <div className='filter__label'>Opponent</div>
+          <div className={`expandable__category ${opponentsCollapsed ? '' : 'expandable__category--expanded'}`}>
+            {
+              displayedOpponents.map(
+                (o) =>
+                  <div key={`opponent-check-${o.name}`} style={{ display: 'flex' }}>
+                    <input
+                      type='checkbox'
+                      checked={o.checked}
+                      onChange={(e) => updateOpponentsFilter(o.name)}
+                    />{o.name}</div>
+              )
+            }
+          </div>
+          {
+            opponentsCollapsed
+            ? <div className='filter-btn' onClick={() => this.setState({ opponentsCollapsed: false })}>More <Down /></div>
+            : <div className='filter-btn' onClick={() => this.setState({ opponentsCollapsed: true })}>Less <Up /></div>
+          }
+        </div>
+        <div className='filter__category'>
           <div className='filter__label'>Untagged</div>
           <div>
             <div style={{ display: 'flex' }}>
@@ -90,6 +112,7 @@ const mapStateToProps = (state) => {
   return {
     tags: state.filters.tags,
     grapplers: state.grapplers.list,
+    opponents: state.filters.opponents,
     selectedGrappler: state.filters.grappler,
     untagged: state.filters.untagged,
   }
@@ -98,9 +121,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     getTags: () => dispatch(getTags()),
-    getGrapplers: () => dispatch(getGrapplers()),
     updateGrapplerFilter: (id) => dispatch(updateGrapplerFilter(id)),
     updateTagFilter: (tag) => dispatch(updateTagFilter(tag)),
+    updateOpponentsFilter: (opponent) => dispatch(updateOpponentsFilter(opponent)),
   }
 }
 

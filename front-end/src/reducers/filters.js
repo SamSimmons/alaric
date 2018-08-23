@@ -1,9 +1,20 @@
 import {
   GET_TAGS_REQUEST, GET_TAGS_SUCCESS, GET_TAGS_FAILURE,
-  UPDATE_GRAPPLER_FILTER, UPDATE_TAG_FILTER,
+  UPDATE_GRAPPLER_FILTER, UPDATE_TAG_FILTER, UPDATE_OPPONENTS_FILTER,
+  OPPONENTS_REQUEST, OPPONENTS_SUCCESS,
 } from '../actions'
 
-export default function(state = { tags: [], selectedTags: [], grappler: 'All', untagged: false, status: 'ok' }, action) {
+const initialState = {
+  tags: [],
+  selectedTags: [],
+  opponents: [],
+  selectedOpponents: [],
+  grappler: 'All',
+  untagged: false,
+  status: 'ok',
+}
+
+export default function(state = initialState, action) {
   switch (action.type) {
     case GET_TAGS_REQUEST: {
       return {
@@ -59,6 +70,38 @@ export default function(state = { tags: [], selectedTags: [], grappler: 'All', u
         tags: updatedTags,
         selectedTags,
         untagged,
+      }
+    }
+    case OPPONENTS_REQUEST: {
+      return {
+        ...state,
+        list: [],
+      }
+    }
+    case OPPONENTS_SUCCESS: {
+      let opponents = action.payload
+        .filter(({opponent}) => opponent !== '')
+        .map(o => ({ name: o.opponent, checked: false }))
+
+      return {
+        ...state,
+        opponents,
+      }
+    }
+    case UPDATE_OPPONENTS_FILTER: {
+      const { opponent } = action
+      const opponents = state.opponents.map((o) => {
+        if (o.name !== opponent) { return o }
+        return {
+          name: o.name,
+          checked: !o.checked,
+        }
+      })
+      const selectedOpponents = opponents.filter(o => o.checked).map(o => o.name)
+      return {
+        ...state,
+        opponents,
+        selectedOpponents,
       }
     }
     default: {

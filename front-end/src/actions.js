@@ -42,6 +42,7 @@ export const UPDATE_CLIP_FAILURE  = 'UPDATE_CLIP_FAILURE'
 
 export const UPDATE_GRAPPLER_FILTER = 'UPDATE_GRAPPLER_FILTER'
 export const UPDATE_TAG_FILTER = 'UPDATE_TAG_FILTER'
+export const UPDATE_OPPONENTS_FILTER = 'UPDATE_OPPONENTS_FILTER'
 
 export const ADD_TO_PLAYLIST = 'ADD_TO_PLAYLIST'
 export const REMOVE_FROM_PLAYLIST = 'REMOVE_FROM_PLAYLIST'
@@ -262,6 +263,13 @@ export function updateTagFilter(tag) {
   return {
     type: UPDATE_TAG_FILTER,
     tag,
+  }
+}
+
+export function updateOpponentsFilter(opponent) {
+  return {
+    type: UPDATE_OPPONENTS_FILTER,
+    opponent,
   }
 }
 

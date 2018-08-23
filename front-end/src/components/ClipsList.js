@@ -1,22 +1,21 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { getClips, getGrapplers, addToPlaylist, removeFromPlaylist } from '../actions'
+import { getClips, getGrapplers, getOpponents, addToPlaylist, removeFromPlaylist } from '../actions'
 import { find, get, includes } from 'lodash'
 
 class ClipsList extends Component {
 
   componentDidMount() {
-    const { getClips, getGrapplers, grapplers, nextPage, selectedGrappler, tags } = this.props
-    getClips({ grappler: get(selectedGrappler, 'id', 'All'), tags, page: nextPage })
-    if (!grapplers.length) {
-      getGrapplers()
-    }
+    const { getClips, getOpponents, getGrapplers } = this.props
+    getClips()
+    getOpponents()
+    getGrapplers()
   }
 
   getNextPage = () => {
-    const { getClips, nextPage, params } = this.props
-    getClips({ page: nextPage, ...params })
+    const { getClips } = this.props
+    getClips()
   }
 
   getPlaylistOptions(clip) {
@@ -43,7 +42,6 @@ class ClipsList extends Component {
 
   render() {
     const { grapplers, list, nextPage, selectable } = this.props
-
     return (
       <div className="clip-list">
         {list.map(
@@ -55,7 +53,11 @@ class ClipsList extends Component {
               : null
             }
             <img className="clip__thumbnail" src={clip.thumbnail} alt="clip preview" />
-            <div>{find(grapplers, ({ id }) => clip.grappler === id).name}</div>
+            <div>
+              {get(
+                find(grapplers, ({ id }) => clip.grappler === id), 'name'
+              )}
+              </div>
             <div>{clip.opponent}</div>
             <div>
               {clip.tags.map(
@@ -90,6 +92,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     getClips: (params) => dispatch(getClips(params)),
     getGrapplers: () => dispatch(getGrapplers()),
+    getOpponents: () => dispatch(getOpponents()),
     addToPlaylist: (id) => dispatch(addToPlaylist([id])),
     removeFromPlaylist: (id) => dispatch(removeFromPlaylist([id])),
 

@@ -9,7 +9,7 @@ import {
   DELETE_CLIP_REQUEST, deleteClipSuccess, deleteClipFailure,
   UPDATE_CLIP_REQUEST, updateClipSuccess, updateClipFailure,
   GET_TAGS_REQUEST, getTagsSuccess, getTagsFailure,
-  UPDATE_GRAPPLER_FILTER, UPDATE_TAG_FILTER,
+  UPDATE_GRAPPLER_FILTER, UPDATE_TAG_FILTER, UPDATE_OPPONENTS_FILTER,
   OPPONENTS_REQUEST, opponentsSuccess, opponentsFail,
 } from './actions'
 import { push } from 'connected-react-router'
@@ -29,6 +29,7 @@ export function* watcherSaga() {
   yield takeLatest(GET_TAGS_REQUEST, getTagsSaga)
   yield takeLatest(UPDATE_GRAPPLER_FILTER, getFilteredClipsSaga)
   yield takeLatest(UPDATE_TAG_FILTER, getFilteredClipsSaga)
+  yield takeLatest(UPDATE_OPPONENTS_FILTER, getFilteredClipsSaga)
   yield takeLatest(OPPONENTS_REQUEST, getOpponentsSaga)
 }
 
@@ -191,10 +192,19 @@ function* getOpponentsSaga(action) {
 
 function* getFilteredClipsSaga(action) {
   try {
-    const { grappler, selectedTags } = yield select((state) => state.filters)
+    const { grappler, selectedTags, selectedOpponents } = yield select((state) => state.filters)
     const { nextPage } = yield select((state) => state.clips)
     const extraParams = action.params
-    const params = getQueryParams({ grappler, tags: selectedTags, page: nextPage }, extraParams)
+    const params = getQueryParams(
+      {
+        grappler,
+        tags: selectedTags,
+        opponents: selectedOpponents,
+        page: nextPage
+      },
+      extraParams,
+    )
+
     const response = yield call(() => axios({ method: 'get', url: `/clips/${params}` }))
     const list = response.data
     yield put(recieveClips(list))

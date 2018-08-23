@@ -7,8 +7,8 @@ import Heart from '../Icons/Heart'
 import DropdownMenu from '../DropdownMenu'
 import Select from 'react-select'
 import Creatable from 'react-select/lib/Creatable';
-import { tagOptions } from '../../constants'
-import { find, get, uniqBy } from 'lodash'
+// import { tagOptions } from '../../constants'
+import { find, get } from 'lodash'
 
  const createSelectValue = (val) => ({ value: val, label: val })
 
@@ -19,7 +19,6 @@ class Clip extends Component {
     opponent: '',
     grappler: null,
     tags: get(this.props.clip, 'tags', []),
-    createdOption: null,
   }
 
   componentDidUpdate(prevProps) {
@@ -91,10 +90,9 @@ class Clip extends Component {
   }
 
   getEditing() {
-    const { grapplers, opponents } = this.props
-    const { grappler, tags, createdOption } = this.state
+    const { grapplers, opponents, tagOptions } = this.props
+    const { grappler, tags } = this.state
     const selected = find(grapplers, ({ id }) => id === grappler)
-    console.log('🚢', tagOptions)
     return (
       <div className='clip__info clip__info--editing'>
         <div className="fieldset">
@@ -113,7 +111,9 @@ class Clip extends Component {
           <label className="label section-title" htmlFor="opponent">Opponent</label>
           <Creatable
             name="opponent"
+            formatCreateLabel={(label) => label}
             isClearable
+            placeholder="Opponent"
             value={this.state.opponent}
             options={opponents.map(createSelectValue)}
             onChange={(opponent) => {
@@ -125,6 +125,8 @@ class Clip extends Component {
           <label className="label section-title" htmlFor="tags">Tags</label>
           <Creatable
             name="tags"
+            placeholder="Tags"
+            formatCreateLabel={(label) => label}
             value={tags}
             options={tagOptions}
             isMulti
@@ -175,11 +177,13 @@ class Clip extends Component {
 }
 
 const mapStateToProps = (state) => {
+  const tagOptions = state.filters.tags.map((opt) => ({ label: opt.name, value: opt.name }))
   return {
     clip: state.clips.selected,
     loading: state.clips.loading,
     grapplers: state.grapplers.list,
     opponents: state.opponents.list,
+    tagOptions,
   }
 }
 

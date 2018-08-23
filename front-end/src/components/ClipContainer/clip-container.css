@@ -8,6 +8,7 @@
 .playlist__clip {
   cursor: pointer;
   flex: 1 1 33%;
+  max-width: 33%;
   min-height: 180px;
   position: relative;
 }
