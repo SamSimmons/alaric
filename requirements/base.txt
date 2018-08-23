@@ -1,14 +1,13 @@
 amqp==2.3.2
 billiard==3.5.0.4
 celery==4.2.0
-Django==1.10.5
+Django==1.11.15
 django-environ==0.4.1
 django-taggit==0.22.2
 django-taggit-serializer==0.1.5
 djangorestframework==3.8.2
 kombu==4.2.1
 Pillow==5.1.0
-pkg-resources==0.0.0
 psycopg2==2.7.4
 psycopg2-binary==2.7.4
 pytz==2018.5
