@@ -36,7 +36,7 @@ export function* watcherSaga() {
 function* clipSaga(action) {
   try {
     const { id } = action
-    const response = yield call(() => axios({ method: 'get', url: `/clips/${id}/` }))
+    const response = yield call(() => axios({ method: 'get', url: `/api/clips/${id}/` }))
     yield put(recieveClip(response.data))
   } catch (err) {
     yield put(clipFail(err))
@@ -48,7 +48,7 @@ function* grapplersSaga() {
     const response = yield call(
       () => axios({
         method: 'get',
-        url: '/grapplers/'
+        url: '/api/grapplers/'
       })
     )
     const list = response.data;
@@ -69,7 +69,7 @@ function* grapplerSaga(action) {
       const response = yield call(
         () => axios({
           method: 'get',
-          url: `/grapplers/${id}/`
+          url: `/api/grapplers/${id}/`
         })
       )
       yield put(recieveGrappler(response.data))
@@ -91,7 +91,7 @@ function* createGrapplerSaga(action) {
     const response = yield call(
       () => axios({
         method: 'post',
-        url: '/grapplers/',
+        url: '/api/grapplers/',
         data
       })
     )
@@ -116,13 +116,13 @@ function* uploadSaga(action) {
     }
     const response = yield call(
       () => axios.post(
-        '/clips/?multi=true',
+        '/api/clips/?multi=true',
         data,
         { headers: { 'Content-Type': 'multipart/form-data' } }
       )
     )
     yield put(uploadSuccess(response))
-    yield put(push(`/grapplers/${grappler.value}/`))
+    yield put(push(`/api/grapplers/${grappler.value}/`))
   } catch (err) {
     yield put(uploadFailure(err))
   }
@@ -134,7 +134,7 @@ function* deleteClipSaga(action) {
     yield call(
       () => axios({
         method: 'delete',
-        url: `/clips/${id}/`,
+        url: `/api/clips/${id}/`,
       })
     )
     yield put(deleteClipSuccess())
@@ -157,7 +157,7 @@ function* updateClipSaga(action) {
     const result = yield call(
       () => axios({
         method: 'patch',
-        url: `/clips/${id}/`,
+        url: `/api/clips/${id}/`,
         data,
       })
     )
@@ -171,7 +171,7 @@ function* getTagsSaga(action) {
   try {
     const { params } = action
     const response = yield call(
-      () => axios.get(`/tags/${params}`)
+      () => axios.get(`/api/tags/${params}`)
     )
     yield put(getTagsSuccess(response.data))
   } catch (err) {
@@ -182,7 +182,7 @@ function* getTagsSaga(action) {
 function* getOpponentsSaga(action) {
   try {
     const response = yield call(
-      () => axios.get(`/opponents/`)
+      () => axios.get(`/api/opponents/`)
     )
     yield put(opponentsSuccess(response.data))
   } catch (err) {
@@ -205,7 +205,7 @@ function* getFilteredClipsSaga(action) {
       extraParams,
     )
 
-    const response = yield call(() => axios({ method: 'get', url: `/clips/${params}` }))
+    const response = yield call(() => axios({ method: 'get', url: `/api/clips/${params}` }))
     const list = response.data
     yield put(recieveClips(list))
   } catch (err) {
