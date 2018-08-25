@@ -12,10 +12,6 @@ router.register(r'clips', ClipViewSet, 'clip-detail')
 urlpatterns = [
     url('^opponents/$', OpponentList.as_view()),
     url('^tags/$', TagList.as_view()),
+    url(r'^media/(?P<path>.*)$', serve, { 'document_root': settings.MEDIA_ROOT, }),
     url(r'^', include(router.urls)),
 ]
-
-if settings.DEBUG:
-    urlpatterns += [
-        url(r'^media/(?P<path>.*)$', serve, { 'document_root': settings.MEDIA_ROOT, })
-    ]

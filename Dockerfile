@@ -16,3 +16,4 @@ RUN pipenv install --deploy --system --skip-lock --dev
 
 # Copy project
 COPY . /code/
+# RUN celery -A proj worker --loglevel=INFO --concurrency=1
