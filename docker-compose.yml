@@ -11,7 +11,7 @@ services:
 
   celery:
     build: .
-    command: celery -A proj worker -l info
+    command: celery -A stalker worker -l info
     volumes:
       - .:/code
     depends_on:
@@ -32,8 +32,6 @@ services:
     depends_on:
       - db
       - redis
-    external_links:
-      - db:db
 
 volumes:
   postgres_data:

@@ -20,6 +20,7 @@ six = "==1.11.0"
 vine = "==1.1.4"
 Django = "==1.11.5"
 Pillow = "==5.1.0"
+ffmpeg-python = "*"
 
 [dev-packages]
 

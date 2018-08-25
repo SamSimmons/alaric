@@ -9,6 +9,10 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /code
 
 # Install dependencies
+RUN apt-get update
+RUN apt-get install -y ffmpeg
+RUN apt-get install -y frei0r-plugins
+
 RUN pip install --upgrade pip
 RUN pip install pipenv
 COPY ./Pipfile /code/Pipfile
@@ -16,4 +20,3 @@ RUN pipenv install --deploy --system --skip-lock --dev
 
 # Copy project
 COPY . /code/
-# RUN celery -A proj worker --loglevel=INFO --concurrency=1

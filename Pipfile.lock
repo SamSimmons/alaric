@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "f02d1946bc884df9a2d8077880c8425b0c6556d41d8246564ee9f4abed349aab"
+            "sha256": "63215721f093c1069aa489081c38f6483e74b677a0e4157f3bed57fc34094e77"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -78,6 +78,19 @@
             "index": "pypi",
             "version": "==3.8.2"
         },
+        "ffmpeg-python": {
+            "hashes": [
+                "sha256:721db04120ad110619c17dd7a72db8d21a6738d721be1b3b4c72a7516e6b07f4"
+            ],
+            "index": "pypi",
+            "version": "==0.1.16"
+        },
+        "future": {
+            "hashes": [
+                "sha256:e39ced1ab767b5936646cedba8bcce582398233d6a627067d4c6a454c90cfedb"
+            ],
+            "version": "==0.16.0"
+        },
         "kombu": {
             "hashes": [
                 "sha256:86adec6c60f63124e2082ea8481bbe4ebe04fde8ebed32c177c7f0cd2c1c9082",
@@ -117,7 +130,7 @@
                 "sha256:fe6931db24716a0845bd8c8915bd096b77c2a7043e6fc59ae9ca364fe816f08b"
             ],
             "index": "pypi",
-            "markers": "python_version != '3.3.*' and python_version >= '2.7' and python_version != '3.0.*' and python_version != '3.2.*' and python_version != '3.1.*'",
+            "markers": "python_version != '3.3.*' and python_version != '3.1.*' and python_version >= '2.7' and python_version != '3.2.*' and python_version != '3.0.*'",
             "version": "==5.1.0"
         },
         "psycopg2": {
