@@ -122,7 +122,7 @@ function* uploadSaga(action) {
       )
     )
     yield put(uploadSuccess(response))
-    yield put(push(`/api/grapplers/${grappler.value}/`))
+    // yield put(push(`/grapplers/${grappler.value}/`))
   } catch (err) {
     yield put(uploadFailure(err))
   }
