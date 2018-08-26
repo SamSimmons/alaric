@@ -17,3 +17,8 @@ def update_missing_thumbs():
     missing_thumbs = Clip.objects.filter(thumbnail='')
     for c in missing_thumbs:
         create_thumbnail.delay(c.id)
+
+def recreate_thumbs():
+    clips = Clip.objects.all()
+    for c in clips:
+        create_thumbnail(c.id)
