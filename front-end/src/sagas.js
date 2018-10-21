@@ -138,7 +138,7 @@ function* deleteClipSaga(action) {
       })
     )
     yield put(deleteClipSuccess())
-    yield put(push('/'))
+    yield put(push('/clips/'))
   } catch (err) {
     yield put(deleteClipFailure(err))
   }
@@ -190,24 +190,25 @@ function* getOpponentsSaga(action) {
   }
 }
 
-function* getFilteredClipsSaga(action) {
+function* getFilteredClipsSaga({ type, params = {}, extraParams = ''}) {
   try {
     const { grappler, selectedTags, selectedOpponents } = yield select((state) => state.filters)
-    const { nextPage } = yield select((state) => state.clips)
-    const extraParams = action.params
-    const params = getQueryParams(
+    const combinedParams = getQueryParams(
       {
         grappler,
         tags: selectedTags,
         opponents: selectedOpponents,
-        page: nextPage
+        ...params,
       },
       extraParams,
     )
 
-    const response = yield call(() => axios({ method: 'get', url: `/api/clips/${params}` }))
-    const list = response.data
-    yield put(recieveClips(list))
+    const response = yield call(() => axios({ method: 'get', url: `/api/clips/${combinedParams}` }))
+    let payload = {
+      ...response.data,
+      page: params.page,
+    }
+    yield put(recieveClips(payload))
   } catch (err) {
     yield put(clipsFail(err))
   }

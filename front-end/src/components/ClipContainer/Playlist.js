@@ -9,14 +9,14 @@ class Playlist extends Component {
   componentDidMount() {
     const { total, getClips } = this.props
     if (total === null) {
-      getClips('&exclude_watched=true')
+      getClips({}, '&exclude_watched=true')
     }
   }
 
   componentDidUpdate(oldProps) {
     if (get(oldProps.clip, 'id') !== get(this.props.clip, 'id') && !this.props.loading) {
       const { getClips } = this.props
-      getClips('&exclude_watched=true')
+      getClips({}, '&exclude_watched=true')
     }
   }
 
@@ -66,7 +66,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getClips: (params) => dispatch(getClips(params))
+    getClips: (params, extraParams) => dispatch(getClips(params, extraParams))
   }
 }
 

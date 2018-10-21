@@ -1,5 +1,5 @@
 
-export const getQueryParams = ({ grappler = "All", tags = [], page = 1, pageSize, opponents }, extraParams = '') => {
+export const getQueryParams = ({ grappler = "All", tags = [], page = 1, pageSize, opponents = [] }, extraParams = '') => {
   let grapplerStr = `grappler=${grappler}`
   let pageStr = `&page=${page}`
   let tagsStr = tags.length ? tags.reduce((result, tag) => `${result}&tag=${tag}`, '') : ''

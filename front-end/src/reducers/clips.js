@@ -1,4 +1,3 @@
-// import queryString from 'query-string'
 import {
   CLIPS_REQUEST, CLIPS_SUCCESS, CLIPS_FAILURE,
   CLIP_REQUEST, CLIP_SUCCESS, CLIP_FAILURE,
@@ -12,7 +11,7 @@ const initialState = {
   loading: false,
   selected: null,
   total: null,
-  nextPage: 1,
+  currentPage: 1,
   error: '',
 }
 
@@ -26,18 +25,12 @@ export default function (state = initialState, action) {
     }
     case CLIPS_SUCCESS: {
       const { payload } = action
-      // let nextPage = null;
-      // if (payload.next) {
-      //   const params = queryString.extract(payload.next)
-      //   const { page } = queryString.parse(params)
-      //   nextPage = page
-      // }
 
       return {
         ...state,
         list: payload.results,
         total: payload.count,
-        // nextPage,
+        currentPage: payload.page ? payload.page : state.currentPage,
         loading: false
       }
     }
@@ -59,7 +52,6 @@ export default function (state = initialState, action) {
         ...state,
         loading: false,
         selected: action.payload,
-        nextPage: 1,
       }
     }
     case CLIP_FAILURE: {
@@ -80,7 +72,7 @@ export default function (state = initialState, action) {
     case UPDATE_GRAPPLER_FILTER: {
       return {
         ...state,
-        nextPage: 1,
+        currentPage: 1,
       }
     }
     default: {

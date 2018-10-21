@@ -4,7 +4,6 @@ import { withRouter } from 'react-router-dom'
 import { getClip, deleteClip, getGrapplers, updateClip, getOpponents } from '../../actions'
 import Loader from '../Loader'
 import Heart from '../Icons/Heart'
-import DropdownMenu from '../DropdownMenu'
 import Select from 'react-select'
 import Creatable from 'react-select/lib/Creatable';
 // import { tagOptions } from '../../constants'
@@ -68,11 +67,10 @@ class Clip extends Component {
           style={{ marginRight: "2rem", fontWeight: '700', cursor: 'pointer' }}
           onClick={() => this.setState({ editing: true })}
         >Edit</div>
-        <DropdownMenu
-          options={[
-            { label: "Delete", action: () =>  deleteClip(clip.id) }
-          ]}
-        />
+        <div
+          style={{ marginRight: "2rem", fontWeight: '700', cursor: 'pointer' }}
+          onClick={() =>  deleteClip(clip.id)}
+        >Delete</div>
       </div>
     )
   }

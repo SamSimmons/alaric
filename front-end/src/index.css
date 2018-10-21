@@ -154,9 +154,11 @@ a, a:visited, a:active {
 .big-link {
   display: inline-block;
   font-weight: 300;
-  font-size: 5rem;
-  margin-bottom: 3rem;
+  font-size: 3rem;
+  margin-bottom: 2rem;
 }
+
+.big-link:last-child { margin-bottom: 0; }
 
 .big-link:hover {
   background: var(--dark);

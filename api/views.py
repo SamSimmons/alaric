@@ -39,16 +39,17 @@ class ClipViewSet(viewsets.ModelViewSet):
         return Response("ok")
 
 
-    def retrieve(self, request, pk=None):
-        if 'watched' not in request.session:
-            request.session['watched'] = [pk]
-        elif pk not in request.session['watched']:
-            request.session['watched'].append(pk)
-            request.session.modified = True
-
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
+    # def retrieve(self, request, pk=None):
+    #     print("🛀", self)
+    #     if 'watched' not in request.session:
+    #         request.session['watched'] = [pk]
+    #     elif pk not in request.session['watched']:
+    #         request.session['watched'].append(pk)
+    #         request.session.modified = True
+    #
+    #     instance = self.get_object()
+    #     serializer = self.get_serializer(instance)
+    #     return Response(serializer.data)
 
     def get_queryset(self):
         queryset = Clip.objects.all()

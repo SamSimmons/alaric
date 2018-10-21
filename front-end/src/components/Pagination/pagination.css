@@ -1,0 +1,16 @@
+.page-controls {
+  display: flex;
+  flex: 1 1 100%;
+  justify-content: space-between;
+  padding-top: 1rem;
+}
+
+.page-btn {
+  margin-right: 1.5rem;
+  cursor: pointer;
+}
+
+.page-btn--disabled {
+  opacity: .5;
+  cursor: initial;
+}

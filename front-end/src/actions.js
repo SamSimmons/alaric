@@ -49,10 +49,11 @@ export const REMOVE_FROM_PLAYLIST = 'REMOVE_FROM_PLAYLIST'
 
 export const SELECT_PROFILE_TAG = 'SELECT_PROFILE_TAG'
 
-export function getClips(params) {
+export function getClips(params = {}, extraParams = '') {
   return {
     type: CLIPS_REQUEST,
-    params
+    params,
+    extraParams,
   }
 }
 
