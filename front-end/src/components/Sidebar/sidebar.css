@@ -5,3 +5,8 @@
 .sidebar__logo {
   max-width: 350px;
 }
+
+.side-nav {
+  display: flex;
+  flex-flow: column;
+}

@@ -15,9 +15,14 @@ class ClipsList extends Component {
   }
 
   render() {
-    const { grapplers, list } = this.props
+    const { grapplers, list, total } = this.props
     return (
       <div className="clip-list">
+        {
+          total === 0
+          ? <div className='big inverted'>No matching clips.</div>
+          : null
+        }
         {list.map(
           (clip) =>
           <Link className="clip-list__container" key={clip.video} to={`/clip/${clip.id}/`}>
@@ -30,12 +35,16 @@ class ClipsList extends Component {
             <div>{clip.opponent}</div>
             <div>
               {clip.tags.map(
-                (t, i) => <span key={`${clip.video}-${i}`}>{t}</span>
+                (t, i) => <span key={`${clip.video}-${i}`}>{`${t}${i === clip.tags.length - 1 ? "" : ", "}`}</span>
               )}
             </div>
           </Link>
         )}
-        <Pagination />
+        {
+          total
+          ? <Pagination />
+          : null
+        }
       </div>
     )
   }

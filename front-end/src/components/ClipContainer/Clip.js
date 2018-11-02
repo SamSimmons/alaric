@@ -1,17 +1,19 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { getClip, deleteClip, getGrapplers, updateClip, getOpponents } from '../../actions'
-import Loader from '../Loader'
 import Heart from '../Icons/Heart'
 import Select from 'react-select'
-import Creatable from 'react-select/lib/Creatable';
-// import { tagOptions } from '../../constants'
+import Overlay from '../Overlay'
+import Creatable from 'react-select/lib/Creatable'
 import { find, get } from 'lodash'
 
  const createSelectValue = (val) => ({ value: val, label: val })
 
 class Clip extends Component {
+
+  video = React.createRef()
+
   state = {
     liked: false,
     editing: false,
@@ -59,7 +61,13 @@ class Clip extends Component {
           <div className="clip__text">{clip.opponent}</div>
           <div className="clip__tags">
             {
-              clip.tags.map((tag, i) => <span className="tag" key={`tag-${clip.id}-${i}`}>{`${tag}${i === clip.tags.length - 1 ? "" : ", "}`}</span>)
+              clip.tags.map(
+                (tag, i) =>
+                  <span
+                    className="tag"
+                    key={`tag-${clip.id}-${i}`}
+                  >{`${tag}${i === clip.tags.length - 1 ? " " : ", "}`}</span>
+                )
             }
           </div>
         </div>
@@ -141,35 +149,44 @@ class Clip extends Component {
     )
   }
 
-  render() {
-    const { loading, clip } = this.props
-    const { editing } = this.state
-
-    if (loading) {
-      return (
-        <div className='clip'>
-          <div className='clip__video'>
-            <Loader />
-          </div>
-        </div>
-      )
+  handleKey = (e) => {
+    const { currentTime, duration } = this.video.current
+    const frameTime = 1 / 25;
+    if (e.keyCode === 188) {
+      this.video.current.currentTime = Math.max(0, currentTime - frameTime)
+    } else if (e.keyCode === 190) {
+      this.video.current.currentTime = Math.min(duration, currentTime + frameTime)
     }
+  }
+
+  render() {
+    const { clip } = this.props
+    const { editing } = this.state
+    const width = get(this.video, 'current.clientWidth', 0)
+    const height = get(this.video, 'current.clientHeight', 0)
 
     if (!clip || clip === "err") {
       return <div>ERROR</div>
     }
 
     return (
-      <Fragment>
-        <div className='clip'>
-          <video className="clip__video" src={clip.video} controls></video>
+      <div className='clip'>
+        <video
+          ref={this.video}
+          className="clip__video"
+          src={get(clip, 'video')}
+          controls
+          onKeyDown={this.handleKey}
+        />
           {
-            editing
-            ? this.getEditing()
-            : this.getInfo()
+            // <Overlay dimensions={{ width, height }} video={this.video} />
           }
-        </div>
-      </Fragment>
+          {
+          editing
+          ? this.getEditing()
+          : this.getInfo()
+        }
+      </div>
     )
   }
 }

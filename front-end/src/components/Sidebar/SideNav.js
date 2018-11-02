@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 const Home = () => {
   return (
-    <div className="top-nav">
+    <div className="side-nav">
         <Link to="/clips/" className="big-link">Clips</Link>
         <Link to="/upload/" className="big-link">Upload</Link>
     </div>

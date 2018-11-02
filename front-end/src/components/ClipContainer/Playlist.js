@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { getClips } from '../../actions'
 import { Link } from 'react-router-dom'
 import { get } from 'lodash'
+import Pagination from '../Pagination/index'
 
 class Playlist extends Component {
 
@@ -15,8 +16,8 @@ class Playlist extends Component {
 
   componentDidUpdate(oldProps) {
     if (get(oldProps.clip, 'id') !== get(this.props.clip, 'id') && !this.props.loading) {
-      const { getClips } = this.props
-      getClips({}, '&exclude_watched=true')
+      const { getClips, page } = this.props
+      getClips({ page }, '&exclude_watched=true')
     }
   }
 
@@ -31,10 +32,8 @@ class Playlist extends Component {
   }
 
   render() {
-    const { clips, loading } = this.props
-    if (loading) {
-      return null
-    }
+    const { clips, total } = this.props
+
     return (
       <div className="playlist">
         {
@@ -50,6 +49,11 @@ class Playlist extends Component {
             )
           })
         }
+        {
+          total
+          ? <Pagination />
+          : null
+        }
       </div>
     )
   }
@@ -61,6 +65,7 @@ const mapStateToProps = (state) => {
     clips: state.clips.list,
     total: state.clips.total,
     loading: state.clips.loading,
+    page: state.clips.currentPage,
   }
 }
 

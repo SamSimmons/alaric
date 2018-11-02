@@ -6,11 +6,11 @@ import './pagination.css'
 class Pagination extends Component {
   requestClips = (page) => {
     const { getClips } = this.props
-    console.log('🐍', page)
     getClips({ page })
   }
+
   render() {
-    const { currentPage } = this.props
+    const { currentPage, nextEnabled } = this.props
     const prevEnabled = currentPage > 1
     return (
       <div className='page-controls'>
@@ -24,7 +24,7 @@ class Pagination extends Component {
         >Prev</div>
         <div className='page-btn'>{currentPage}</div>
         <div
-          className='page-btn'
+          className={`page-btn ${nextEnabled ? '' : 'page-btn--disabled'}`}
           onClick={() => this.requestClips(currentPage + 1)}
         >Next</div>
       </div>
@@ -35,6 +35,7 @@ class Pagination extends Component {
 const mapStateToProps = (state) => {
   return {
     currentPage: state.clips.currentPage,
+    nextEnabled: state.clips.nextPageExists,
   }
 }
 

@@ -3,13 +3,11 @@ import { connect } from 'react-redux'
 import { getGrapplers, uploadRequest } from '../actions'
 import Select from 'react-select'
 import { Link } from 'react-router-dom'
-import { tagOptions } from '../constants'
 
 class Upload extends Component {
   state = {
     files: [],
     grappler: null,
-    tags: [],
   }
 
   componentDidMount() {
@@ -31,7 +29,7 @@ class Upload extends Component {
     if (!list.length) {
       return null
     }
-    const { grappler, tags } = this.state
+    const { grappler } = this.state
     const grapplerOptions = list.map((g) => {
       return {
         value: g.id,
@@ -62,18 +60,6 @@ class Upload extends Component {
             onChange={(e) => {
               const files = e.target.files
               this.setState({ files })
-            }}
-          />
-        </div>
-        <div className="fieldset">
-          <label className="label section-title" htmlFor="tags">Tags</label>
-          <Select
-            name="tags"
-            value={tags}
-            options={tagOptions}
-            multi={true}
-            onChange={(selected) => {
-              this.setState({ tags: selected })
             }}
           />
         </div>

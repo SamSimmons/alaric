@@ -12,6 +12,7 @@ const initialState = {
   selected: null,
   total: null,
   currentPage: 1,
+  nextPageExists: false,
   error: '',
 }
 
@@ -25,12 +26,12 @@ export default function (state = initialState, action) {
     }
     case CLIPS_SUCCESS: {
       const { payload } = action
-
       return {
         ...state,
         list: payload.results,
         total: payload.count,
         currentPage: payload.page ? payload.page : state.currentPage,
+        nextPageExists: !!payload.next,
         loading: false
       }
     }

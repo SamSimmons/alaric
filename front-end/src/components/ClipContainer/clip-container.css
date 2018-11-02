@@ -42,3 +42,13 @@
   font-size: 2rem;
   padding: 0 1rem 1rem;
 }
+
+.clip {
+  position: relative;
+}
+
+.clip__overlay {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+}
