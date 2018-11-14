@@ -2,6 +2,8 @@
   font-size: 1.35rem;
   font-weight: 400;
   margin-bottom: 1rem;
+  display: flex;
+  align-items: center
 }
 
 .filter__category {
@@ -24,4 +26,39 @@
 
 .filter-btn:hover {
   fill: var(--primary);
+}
+
+.sort-dropdown {
+  fill: rgb(79, 79, 79);
+  cursor: pointer;
+  position: relative;
+}
+
+.sort-header {
+  display: flex;
+  align-items: center;
+}
+
+.sort-menu {
+  position: absolute;
+  right: 0;
+  font-size: 1rem;
+  font-weight: 300;
+  background: var(--dark);
+  color: var(--light);
+  padding: .25rem 0;
+}
+
+.sort-menu__option {
+  padding: .35rem 1rem;
+}
+
+.sort-menu__option:hover {
+  background: var(--primary);
+  color: var(--dark);
+  transition: all 0.3s ease-in-out;
+}
+
+.sort-header svg {
+  margin-left: 1rem;
 }

@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom'
 import { getClip, deleteClip, getGrapplers, updateClip, getOpponents } from '../../actions'
 import Heart from '../Icons/Heart'
 import Select from 'react-select'
-import Overlay from '../Overlay'
+// import Overlay from '../Overlay'
 import Creatable from 'react-select/lib/Creatable'
 import { find, get } from 'lodash'
 
@@ -162,8 +162,8 @@ class Clip extends Component {
   render() {
     const { clip } = this.props
     const { editing } = this.state
-    const width = get(this.video, 'current.clientWidth', 0)
-    const height = get(this.video, 'current.clientHeight', 0)
+    // const width = get(this.video, 'current.clientWidth', 0)
+    // const height = get(this.video, 'current.clientHeight', 0)
 
     if (!clip || clip === "err") {
       return <div>ERROR</div>

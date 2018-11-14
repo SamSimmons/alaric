@@ -1,130 +1,119 @@
-import React, { Component } from 'react'
-import Up from 'typicons.font/src/svg/arrow-sorted-up.svg'
-import Down from 'typicons.font/src/svg/arrow-sorted-down.svg'
+import React, { useState, Suspense, lazy } from 'react'
 import './filter.css'
-import { connect } from 'react-redux'
-import { getTags, updateGrapplerFilter, updateTagFilter, updateOpponentsFilter } from '../../actions'
+// import { connect } from 'react-redux'
+// import { getTags, updateGrapplerFilter, updateTagFilter, updateOpponentsFilter } from '../../actions'
+import { unstable_createResource as createResource } from 'react-cache';
+import axios from 'axios'
+import { sortBy } from 'lodash';
+const SortDropdown = lazy(() => import('./SortDropdown'))
 
 
-class Filter extends Component {
+const tagsCache = createResource(() => axios.get(`/api/tags/`).then(({ data }) => data))
+const grapplerCache = createResource(() => axios.get(`/api/grapplers/`).then(({ data }) => data))
+const opponentCache = createResource(() => axios.get(`/api/opponents/`)
+  .then(
+    ({ data }) => data
+      .map(({ opponent }) => opponent)
+      .filter((name) => name !== ''))
+  )
 
-  state = {
-    tagsCollapsed: true,
-    opponentsCollapsed: true,
-  }
+const Filter = () => {
+  const [ tagsSortOrder, setTagOrder ] = useState('name')
+  const tags = sortBy(tagsCache.read(), (item) => {
+    if (tagsSortOrder === 'num_times') { return -item[tagsSortOrder]}
+    return item[tagsSortOrder]
+  })
 
-  componentDidMount() {
-    const { getTags } = this.props
-    getTags()
-  }
 
-  render() {
-    const { grapplers, tags, untagged, opponents, selectedGrappler, updateGrapplerFilter, updateTagFilter, updateOpponentsFilter } = this.props
-    const { tagsCollapsed, opponentsCollapsed } = this.state
-    const displayedTags = tagsCollapsed ? tags.slice(0, 5) : tags
-    const displayedOpponents = opponentsCollapsed ? opponents.slice(0, 5) : opponents
-    return (
-      <div>
-        <div className='filter__category'>
-          <div className='filter__label'>Grappler</div>
-          <div>
-            <select
-              name='grapplers'
-              id='grapplers'
-              value={selectedGrappler}
-              onChange={(e) => updateGrapplerFilter(e.target.value)}
-            >
-              <option value="All">All</option>
-              {
-                grapplers.map(
-                  (g) =>
-                    <option
-                      key={`grappler-check-${g.id}`}
-                      value={g.id}
-                    >{g.name}</option>
-                )
-              }
-            </select>
-          </div>
-        </div>
-        <div className='filter__category'>
-          <div className='filter__label'>Tags</div>
-          <div className={`expandable__category ${tagsCollapsed ? '' : 'expandable__category--expanded'}`}>
+  const grapplers = sortBy(grapplerCache.read(), ({ name }) => name.split(' ').pop())
+  const [ selectedGrappler, updateGrappler ] = useState('All')
+
+  const [ untagged, updateUntagged ] = useState(false)
+
+  const opponents = sortBy(opponentCache.read(), (opponent) => opponent.split(' ').pop())
+  const [ selectedOpponents, updateOpponents ] = useState([])
+  console.log('🐏', opponents)
+  return (
+    <div>
+      <div className='filter__category'>
+        <div className='filter__label'>Grappler</div>
+        <div>
+          <select
+            name='grapplers'
+            id='grapplers'
+            value={selectedGrappler}
+            onChange={(e) => updateGrappler(e.target.value)}
+          >
+            <option value="All">All</option>
             {
-              displayedTags.map(
-                (t) =>
-                  <div key={`tag-check-${t.name}`} style={{ display: 'flex' }}>
-                    <input
-                      type='checkbox'
-                      checked={t.checked}
-                      onChange={(e) => updateTagFilter(t.name)}
-                    />{t.name}</div>
+              grapplers.map(
+                (g) =>
+                  <option
+                    key={`grappler-check-${g.id}`}
+                    value={g.id}
+                  >{g.name}</option>
               )
             }
-          </div>
-          {
-            tagsCollapsed
-            ? <div className='filter-btn' onClick={() => this.setState({ tagsCollapsed: false })}>More <Down /></div>
-            : <div className='filter-btn' onClick={() => this.setState({ tagsCollapsed: true })}>Less <Up /></div>
-          }
-        </div>
-        <div className='filter__category'>
-          <div className='filter__label'>Opponent</div>
-          <div className={`expandable__category ${opponentsCollapsed ? '' : 'expandable__category--expanded'}`}>
-            {
-              displayedOpponents.map(
-                (o) =>
-                  <div key={`opponent-check-${o.name}`} style={{ display: 'flex' }}>
-                    <input
-                      type='checkbox'
-                      checked={o.checked}
-                      onChange={(e) => updateOpponentsFilter(o.name)}
-                    />{o.name}</div>
-              )
-            }
-          </div>
-          {
-            opponentsCollapsed
-            ? <div className='filter-btn' onClick={() => this.setState({ opponentsCollapsed: false })}>More <Down /></div>
-            : <div className='filter-btn' onClick={() => this.setState({ opponentsCollapsed: true })}>Less <Up /></div>
-          }
-        </div>
-        <div className='filter__category'>
-          <div className='filter__label'>Untagged</div>
-          <div>
-            <div style={{ display: 'flex' }}>
-              <input
-                type='checkbox'
-                id="untagged"
-                checked={untagged}
-                onChange={(e) => updateTagFilter('untagged')}
-              />
-              <label htmlFor='untagged'>Untagged</label>
-            </div>
-        </div>
+          </select>
         </div>
       </div>
-    )
-  }
+      <div className='filter__category'>
+        <div className='filter__label'>
+          <span>Tags</span>
+          <SortDropdown
+            id='tags'
+            options={[
+              { value: 'name', label: 'Name' },
+              { value: 'num_times', label: 'Popularity' },
+            ]}
+            update={(val) => setTagOrder(val)}
+          />
+        </div>
+        <div className={`expandable__category expandable__category--expanded`}>
+          {
+            tags.map(
+              (t) =>
+                <div key={`tag-check-${t.name}`} style={{ display: 'flex' }}>
+                  <input
+                    type='checkbox'
+                    checked={t.checked}
+                    onChange={(e) => console.log('🐝', t.name)}
+                  />{t.name}</div>
+            )
+          }
+        </div>
+      </div>
+      <div className='filter__category'>
+        <div className='filter__label'>Opponent</div>
+        <div className={`expandable__category expandable__category--expanded`}>
+          {
+            opponents.map(
+              (o) =>
+                <div key={`opponent-check-${o}`} style={{ display: 'flex' }}>
+                  <input
+                    type='checkbox'
+                    onChange={(e) => updateOpponents(o)}
+                  />{o}</div>
+            )
+          }
+        </div>
+      </div>
+      <div className='filter__category'>
+        <div className='filter__label'>Untagged</div>
+        <div>
+          <div style={{ display: 'flex' }}>
+            <input
+              type='checkbox'
+              id="untagged"
+              checked={untagged}
+              onChange={(e) => updateUntagged(!untagged)}
+            />
+            <label htmlFor='untagged'>Untagged</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 }
 
-const mapStateToProps = (state) => {
-  return {
-    tags: state.filters.tags,
-    grapplers: state.grapplers.list,
-    opponents: state.filters.opponents,
-    selectedGrappler: state.filters.grappler,
-    untagged: state.filters.untagged,
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    getTags: () => dispatch(getTags()),
-    updateGrapplerFilter: (id) => dispatch(updateGrapplerFilter(id)),
-    updateTagFilter: (tag) => dispatch(updateTagFilter(tag)),
-    updateOpponentsFilter: (opponent) => dispatch(updateOpponentsFilter(opponent)),
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Filter)
+export default Filter

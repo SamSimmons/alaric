@@ -1,5 +1,7 @@
 .sidebar {
   padding: 3rem;
+  background: rgba(80, 80, 80, .1);
+  box-shadow: 0 2px 1px 1px rgba(20, 20, 20, .1);
 }
 
 .sidebar__logo {
