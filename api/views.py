@@ -31,25 +31,12 @@ class ClipViewSet(viewsets.ModelViewSet):
     def create(self, request):
         last = int(request.data['videos[length]'])
         grappler = Grappler.objects.get(id=request.data['grappler'])
-        tags = request.data['tags']
         for i in range(0, last):
             video = request.data['videos[' + str(i) + ']']
-            clip = Clip.objects.create(grappler=grappler, tags=tags, video=video)
+            clip = Clip.objects.create(grappler=grappler, video=video)
             create_thumbnail.delay(clip.id)
         return Response("ok")
 
-
-    # def retrieve(self, request, pk=None):
-    #     print("🛀", self)
-    #     if 'watched' not in request.session:
-    #         request.session['watched'] = [pk]
-    #     elif pk not in request.session['watched']:
-    #         request.session['watched'].append(pk)
-    #         request.session.modified = True
-    #
-    #     instance = self.get_object()
-    #     serializer = self.get_serializer(instance)
-    #     return Response(serializer.data)
 
     def get_queryset(self):
         queryset = Clip.objects.all()

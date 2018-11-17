@@ -1,22 +1,16 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { getGrapplers, uploadRequest } from '../actions'
+import React, { useState } from 'react'
 import Select from 'react-select'
 import { Link } from 'react-router-dom'
+import { grapplerCache } from './Filter'
+import { withRouter } from 'react-router-dom'
+import axios from 'axios'
 
-class Upload extends Component {
-  state = {
-    files: [],
-    grappler: null,
-  }
+const Upload = (props) => {
+  const grapplers = grapplerCache.read().map(({ id, name }) => ({ value: id, label: name }))
+  const [ grappler, changeGrappler ] = useState("")
+  const [ files, changeFiles ] = useState([])
 
-  componentDidMount() {
-    const { getGrapplers } = this.props
-    getGrapplers()
-  }
-
-  getFileLabel() {
-    const { files } = this.state
+  const getFileLabel = () => {
     switch (files.length) {
       case 0: { return "Choose a File"}
       case 1: { return "1 File Selected"}
@@ -24,71 +18,53 @@ class Upload extends Component {
     }
   }
 
-  render() {
-    const { list } = this.props
-    if (!list.length) {
-      return null
-    }
-    const { grappler } = this.state
-    const grapplerOptions = list.map((g) => {
-      return {
-        value: g.id,
-        label: g.name,
-      }
-    })
-    return (
-      <div className="upload-form">
-        <div className="fieldset">
-          <label className="label section-title" htmlFor="grappler">Grappler</label>
-          <Select
-            name="grappler"
-            value={grappler}
-            options={grapplerOptions}
-            onChange={(selected) => {
-              this.setState({ grappler: selected })
-            }}
-          />
-        </div>
-        <div className="fieldset">
-          <label htmlFor="file" className="label label--file section-title">{this.getFileLabel()}</label>
-          <input
-            className="inputfile"
-            multiple="multiple"
-            name="file"
-            id="file"
-            type="file"
-            onChange={(e) => {
-              const files = e.target.files
-              this.setState({ files })
-            }}
-          />
-        </div>
-        <div className="btn-container">
-          <Link to="/" className="btn btn--secondary">Cancel</Link>
-          <button
-            className="btn"
-            onClick={() => {
-              const { uploadRequest } = this.props
-              uploadRequest(this.state)
-            }}
-          >Save</button>
-        </div>
+  return (
+    <div className="upload-form">
+      <div className="fieldset">
+        <label className="label section-title" htmlFor="grappler">Grappler</label>
+        <Select
+          name="grappler"
+          value={grappler}
+          options={grapplers}
+          onChange={(selected) => changeGrappler(selected)}
+        />
       </div>
-    )
-  }
+      <div className="fieldset">
+        <label htmlFor="file" className="label label--file section-title">{getFileLabel()}</label>
+        <input
+          className="inputfile"
+          multiple="multiple"
+          name="file"
+          id="file"
+          type="file"
+          onChange={(e) => {
+            const { files } = e.target
+            changeFiles(files)
+          }}
+        />
+      </div>
+      <div className="btn-container">
+        <Link to="/" className="btn btn--secondary">Cancel</Link>
+        <button
+          className="btn"
+          onClick={() => {
+            const { history } = props
+            const data =  new FormData()
+            data.append('grappler', grappler.value)
+            for(let key in files) {
+              data.append(`videos[${key}]`, files[key])
+            }
+            axios.post('/api/clips/?multi=true', data, { headers: { 'Content-Type': 'multipart/form-data' }})
+              .then(({ data }) => {
+                history.push('/')
+                return data
+              })
+
+          }}
+        >Save</button>
+      </div>
+    </div>
+  )
 }
 
-const mapStateToProps = (state) => {
-  return {
-    list: state.grapplers.list
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    uploadRequest: (params) => dispatch(uploadRequest(params)),
-    getGrapplers: () => dispatch(getGrapplers())
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Upload)
+export default withRouter(Upload)
