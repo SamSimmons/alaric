@@ -19,29 +19,30 @@ function App() {
 
   const [ selectedOpponents, updateOpponents ] = useState([])
 
+  const [ page, updatePage ] = useState(1)
+
   return (
     <div className="app">
       <Suspense fallback={<h2>LOADING</h2>}>
-          <Sidebar
-            filterProps={{
-              selectedTags,
-              updateTags,
-              selectedGrappler,
-              updateGrappler,
-              untagged,
-              updateUntagged,
-              selectedOpponents,
-              updateOpponents,
-            }}
-          />
         <FilterContext.Provider
           value={{
-            selectedTags,
-            selectedGrappler,
-            untagged,
-            selectedOpponents,
+            filterValues: {
+              selectedTags,
+              selectedGrappler,
+              untagged,
+              selectedOpponents,
+              page,
+            },
+            filterSetters: {
+              updateTags,
+              updateGrappler,
+              updateUntagged,
+              updateOpponents,
+              updatePage,
+            }
           }}
         >
+          <Sidebar />
           <div className='app__body'>
             <Switch>
               <Route path="/clip/:id/" render={(props) => <ClipContainer {...props} />} />

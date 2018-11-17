@@ -8,11 +8,11 @@ import { getQueryParams } from '../utils'
 import { grapplerCache } from './Filter'
 const Pagination = lazy(() => import('./Pagination'))
 
-const clipsCache = createResource((params) => axios.get(`/api/clips/${params}`).then(({ data }) => data))
+export const clipsCache = createResource((params) => axios.get(`/api/clips/${params}`).then(({ data }) => data))
 
 const ClipsList = (props) => {
-  const filters = useContext(FilterContext)
-  const filterParams = getQueryParams(filters)
+  const { filterValues } = useContext(FilterContext)
+  const filterParams = getQueryParams(filterValues)
   const { count, results: clips } = clipsCache.read(filterParams)
   const grapplers = grapplerCache.read()
   return (

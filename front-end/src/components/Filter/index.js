@@ -1,8 +1,9 @@
-import React, { useState, Suspense, lazy } from 'react'
+import React, { useState, useContext, Suspense, lazy } from 'react'
 import './filter.css'
 import { unstable_createResource as createResource } from 'react-cache';
 import axios from 'axios'
 import { sortBy, includes } from 'lodash';
+import { FilterContext } from '../App'
 const SortDropdown = lazy(() => import('./SortDropdown'))
 
 export const tagsCache = createResource(() => axios.get(`/api/tags/`).then(({ data }) => data))
@@ -15,16 +16,11 @@ export const opponentCache = createResource(() => axios.get(`/api/opponents/`)
   )
 
 const Filter = (props) => {
-  const {
-    selectedTags,
-    updateTags,
-    selectedGrappler,
-    updateGrappler,
-    untagged,
-    updateUntagged,
-    selectedOpponents,
-    updateOpponents,
-  } = props
+
+  const { filterValues, filterSetters } = useContext(FilterContext)
+
+  const { selectedTags, selectedGrappler, untagged, selectedOpponents } = filterValues
+  const { updateTags, updateGrappler, updateUntagged, updateOpponents, updatePage } = filterSetters
 
   const [ tagsSortOrder, setTagOrder ] = useState('name')
 
@@ -44,8 +40,11 @@ const Filter = (props) => {
             name='grapplers'
             id='grapplers'
             value={selectedGrappler}
-            onChange={(e) => updateGrappler(e.target.value)}
-            >
+            onChange={(e) => {
+              updateGrappler(e.target.value)
+              updatePage(1)
+            }}
+          >
             <option value="All">All</option>
             {
               grapplers.map(
@@ -87,8 +86,9 @@ const Filter = (props) => {
                           updateTags(nextTags);
                         } else {
                           const nextTags = selectedTags.concat(t.name);
-                          updateTags(nextTags);
+                          updateTags(nextTags)
                         }
+                        updatePage(1)
                       }}
                       />{t.name}</div>
                   )
@@ -117,6 +117,7 @@ const Filter = (props) => {
                             const nextOpponents = selectedOpponents.concat(name)
                             updateOpponents(nextOpponents)
                           }
+                          updatePage(1)
                         }}
                         />{name}</div>
                     )
@@ -133,7 +134,10 @@ const Filter = (props) => {
                   type='checkbox'
                   id="untagged"
                   checked={untagged}
-                  onChange={(e) => updateUntagged(!untagged)}
+                  onChange={(e) => {
+                    updateUntagged(!untagged)
+                    updatePage(1)
+                  }}
                   />
                 <label htmlFor='untagged'>Untagged</label>
               </div>
