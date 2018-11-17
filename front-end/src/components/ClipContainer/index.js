@@ -3,7 +3,8 @@ import Clip from './Clip'
 import Playlist from './Playlist'
 import './clip-container.css'
 
-const ClipContainer = () => {
+const ClipContainer = (props) => {
+  
   return (
     <div>
       <Clip />

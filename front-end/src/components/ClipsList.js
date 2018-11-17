@@ -1,75 +1,51 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, { useContext, lazy } from 'react'
+import { unstable_createResource as createResource } from 'react-cache';
 import { Link } from 'react-router-dom'
-import { getClips, getGrapplers, getOpponents, addToPlaylist, removeFromPlaylist } from '../actions'
+import axios from 'axios'
 import { find, get } from 'lodash'
-import Pagination from './Pagination/index'
+import { FilterContext } from './App'
+import { getQueryParams } from '../utils'
+import { grapplerCache } from './Filter'
+const Pagination = lazy(() => import('./Pagination'))
 
-class ClipsList extends Component {
+const clipsCache = createResource((params) => axios.get(`/api/clips/${params}`).then(({ data }) => data))
 
-  componentDidMount() {
-    const { getClips, getOpponents, getGrapplers } = this.props
-    getClips()
-    getOpponents()
-    getGrapplers()
-  }
-
-  render() {
-    const { grapplers, list, total } = this.props
-    return (
-      <div className="clip-list">
-        {
-          total === 0
-          ? <div className='big inverted'>No matching clips.</div>
-          : null
-        }
-        {list.map(
-          (clip) =>
-          <Link className="clip-list__container" key={clip.video} to={`/clip/${clip.id}/`}>
-            <img className="clip__thumbnail" src={clip.thumbnail} alt="clip preview" />
-            <div>
-              {get(
-                find(grapplers, ({ id }) => clip.grappler === id), 'name'
-              )}
-              </div>
-            <div>{clip.opponent}</div>
-            <div>
-              {clip.tags.map(
-                (t, i) => <span key={`${clip.video}-${i}`}>{`${t}${i === clip.tags.length - 1 ? "" : ", "}`}</span>
-              )}
+const ClipsList = (props) => {
+  const filters = useContext(FilterContext)
+  const filterParams = getQueryParams(filters)
+  const { count, results: clips } = clipsCache.read(filterParams)
+  const grapplers = grapplerCache.read()
+  return (
+    <div className="clip-list">
+      {
+        count === 0
+        ? <div className='big inverted'>No matching clips.</div>
+        : null
+      }
+      {clips.map(
+        (clip) =>
+        <Link className="clip-list__container" key={clip.video} to={`/clip/${clip.id}/`}>
+          <img className="clip__thumbnail" src={clip.thumbnail} alt="clip preview" />
+          <div>
+            {get(
+              find(grapplers, ({ id }) => clip.grappler === id), 'name'
+            )}
             </div>
-          </Link>
-        )}
-        {
-          total
-          ? <Pagination />
-          : null
-        }
-      </div>
-    )
-  }
+          <div>{clip.opponent}</div>
+          <div>
+            {clip.tags.map(
+              (t, i) => <span key={`${clip.video}-${i}`}>{`${t}${i === clip.tags.length - 1 ? "" : ", "}`}</span>
+            )}
+          </div>
+        </Link>
+      )}
+      {
+        count
+        ? <Pagination />
+        : null
+      }
+    </div>
+  )
 }
 
-const mapStateToProps = (state) => {
-  return {
-    list: state.clips.list,
-    grapplers: state.grapplers.list,
-    total: state.clips.total,
-    selectedGrappler: get(state.grapplers, 'selected.id'),
-    playlist: state.playlist.list,
-    tags: state.filters.selectedTags,
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    getClips: (params, extraParams) => dispatch(getClips(params, extraParams)),
-    getGrapplers: () => dispatch(getGrapplers()),
-    getOpponents: () => dispatch(getOpponents()),
-    addToPlaylist: (id) => dispatch(addToPlaylist([id])),
-    removeFromPlaylist: (id) => dispatch(removeFromPlaylist([id])),
-
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ClipsList)
+export default ClipsList

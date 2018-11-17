@@ -14,7 +14,7 @@ const Sidebar = (props) => {
       <div className='divider' />
       <SideNav />
       <div className='divider' />
-      <Filter />
+      <Filter {...props.filterProps} />
     </div>
   )
 }

@@ -24,7 +24,7 @@ class Grappler(models.Model):
 
 class Clip(models.Model):
     grappler = models.ForeignKey(Grappler, models.CASCADE)
-    opponent = models.CharField(max_length=250, default='')
+    opponent = models.CharField(max_length=250, default='', blank=True)
     video = models.FileField(upload_to='uploads/')
     thumbnail = models.FileField(upload_to="thumbnails", blank=True)
     tags = TaggableManager(blank=True)

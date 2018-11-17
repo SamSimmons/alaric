@@ -1,9 +1,12 @@
 
-export const getQueryParams = ({ grappler = "All", tags = [], page = 1, pageSize, opponents = [] }, extraParams = '') => {
-  let grapplerStr = `grappler=${grappler}`
+export const getQueryParams = ({ selectedGrappler = "All", selectedTags = [], page = 1, pageSize, selectedOpponents = [], untagged = false }, extraParams = '') => {
+  let grapplerStr = `grappler=${selectedGrappler}`
   let pageStr = `&page=${page}`
-  let tagsStr = tags.length ? tags.reduce((result, tag) => `${result}&tag=${tag}`, '') : ''
-  let opponentStr = opponents.length ? opponents.reduce((result, opp) => `${result}&opponent=${opp}`, '') : ''
+  let tagsStr = selectedTags.length ? selectedTags.reduce((result, tag) => `${result}&tag=${tag}`, '') : ''
+  if (untagged) {
+    tagsStr = '&tag=untagged'
+  }
+  let opponentStr = selectedOpponents.length ? selectedOpponents.reduce((result, opp) => `${result}&opponent=${opp}`, '') : ''
   let pageSizeStr = pageSize ? `&page_size=${pageSize}` : ''
   return `?${grapplerStr}${pageStr}${pageSizeStr}${tagsStr}${opponentStr}${extraParams}`
 }
