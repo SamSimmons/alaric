@@ -43,9 +43,10 @@ class ClipViewSet(viewsets.ModelViewSet):
         tags = self.request.query_params.getlist('tag', [])
         if len(tags) > 0 and "All"  not in tags:
             if "untagged" in tags:
-                return queryset.filter(tags=None)
-            for key in tags:
-                queryset = queryset.filter(tags__name__in=[key])
+                queryset = queryset.filter(tags=None)
+            else:
+                for key in tags:
+                    queryset = queryset.filter(tags__name__in=[key])
 
         grapplers = self.request.query_params.getlist('grappler', [])
         if len(grapplers) > 0 and "All" not in grapplers:
@@ -53,13 +54,7 @@ class ClipViewSet(viewsets.ModelViewSet):
 
         opponents = self.request.query_params.getlist('opponent', [])
         if len(opponents) > 0:
-            print('---->', opponents)
             queryset = queryset.filter(opponent__in=opponents)
-
-        exclude_watched = self.request.query_params.get('exclude_watched', '')
-        if 'watched' in self.request.session and exclude_watched == 'true':
-            watched = self.request.session['watched']
-            queryset = queryset.exclude(id__in=watched)
 
         return queryset
 

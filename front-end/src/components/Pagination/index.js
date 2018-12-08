@@ -19,12 +19,20 @@ const Pagination = () => {
     <div className='page-controls'>
       <div
         className={`page-btn ${prevEnabled ? '' : 'page-btn--disabled'}`}
-        onClick={() => updatePage(page - 1)}
+        onClick={() => {
+          if (prevEnabled) {
+            updatePage(page - 1)
+          }
+        }}
       >Prev</div>
     <div className='page-btn'>{page}</div>
       <div
         className={`page-btn ${nextEnabled ? '' : 'page-btn--disabled'}`}
-        onClick={() => updatePage(page + 1)}
+        onClick={() => {
+          if (nextEnabled) {
+            updatePage(page + 1)
+          }
+        }}
       >Next</div>
     </div>
   )
