@@ -25,7 +25,7 @@ const Pagination = () => {
           }
         }}
       >Prev</div>
-    <div className='page-btn'>{page}</div>
+      <div className='page-btn'>{page}</div>
       <div
         className={`page-btn ${nextEnabled ? '' : 'page-btn--disabled'}`}
         onClick={() => {
