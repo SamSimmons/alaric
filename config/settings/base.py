@@ -49,6 +49,7 @@ THIRD_PARTY_APPS = (
     'rest_framework',
     'taggit',
     'taggit_serializer',
+    'django_unused_media',
 )
 
 LOCAL_APPS = (
