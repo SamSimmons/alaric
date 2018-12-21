@@ -6,6 +6,11 @@
   align-items: center
 }
 
+.filter__label svg {
+  fill: var(--dark);
+  margin-left: auto;
+}
+
 .filter__category {
   margin-bottom: 2rem;
 }

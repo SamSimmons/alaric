@@ -1,6 +1,6 @@
 [] - clip gabriel arges matches
 [] - Notes on Ross Nicholls
-[] - Make filters collapsible
+[x] - Make filters collapsible
 [] - Once a untagged clip has been tagged it should disappear from the list
 
 

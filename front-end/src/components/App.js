@@ -1,11 +1,12 @@
 import React, { useState, Suspense, createContext, lazy } from 'react'
 import { Route, Switch, Redirect } from 'react-router-dom'
 import { withRouter } from 'react-router'
-const Sidebar = lazy(() => import('./Sidebar/index'))
+const Sidebar = lazy(() => import('./Sidebar'))
 const CreateGrappler = lazy(() => import('./CreateGrappler'))
 const ClipContainer = lazy(() => import('./ClipContainer'))
 const ClipsList = lazy(() => import('./ClipsList'))
 const Upload = lazy(() => import('./Upload'))
+const Grapplers = lazy(() => import('./Grapplers'))
 
 export const FilterContext = createContext()
 
@@ -47,6 +48,7 @@ function App() {
             <Switch>
               <Route path="/clip/:id/" render={(props) => <ClipContainer {...props} />} />
               <Route path="/upload/" render={(props) => <Upload {...props} />} />
+              <Route path="/grapplers/" render={(props) => <Grapplers {...props} />} />
               <Route path="/create/" render={(props) => <CreateGrappler {...props} />} />
               <Route path="/clips/" render={(props) => <ClipsList {...props} />} />
               <Redirect to='/clips/' />

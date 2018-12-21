@@ -1,0 +1,52 @@
+.grapplers__wrapper {
+  display: flex;
+  flex-flow: row wrap;
+  max-width: 60rem;
+}
+
+.grapplers-card {
+  margin: 0 4rem 4rem 0;
+  box-sizing: border-box;
+  flex: 0 1 calc(50% - 4rem);
+  border: 1px solid hsla(0, 0%, 69.4%, 0.1);
+  box-shadow: 1px 3px 1px 0px hsla(0, 0%, 69.4%, 0.4);
+  position: relative;
+  min-height: 10rem;
+}
+
+.grapplers-card__header {
+  background: rgba(80, 80, 80, .1);
+  font-weight: 700;
+  font-size: 1.2rem;
+  padding: 1rem 1rem 1rem 8rem;
+  text-align: right;
+}
+
+.grapplers-card__avatar {
+  border: 5px solid var(--light);
+  background: var(--light);
+  border-radius: 50%;
+  overflow: hidden;
+  height: 6rem;
+  width: 6rem;
+  top: 1rem;
+  left: 1.5rem;
+  position: absolute
+}
+
+.grapplers-card__avatar img {
+  width: 6rem;
+  height: 6rem;
+  object-fit: cover;
+}
+
+.grapplers-card__body {
+  padding: 1rem 1rem 1rem 8rem;
+  display: flex;
+  align-items: flex-end;
+  flex-flow: column;
+}
+
+.grapplers-card__body > div {
+  margin-bottom: .5rem;
+}

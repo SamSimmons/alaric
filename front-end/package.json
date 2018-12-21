@@ -72,6 +72,10 @@
   "eslintConfig": {
     "extends": "react-app"
   },
+  "standard": {
+    "globals": ["import"],
+    "parser": "babel-eslint"
+  },
   "proxy": "http://localhost:8000",
   "jest": {
     "collectCoverageFrom": [

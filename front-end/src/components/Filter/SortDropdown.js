@@ -7,32 +7,32 @@ const SortDropdown = ({ options, update, id }) => {
 
   return (
     <div
-     onClick={() => toggle(!open)}
-     className='sort-dropdown'
+      onClick={() => toggle(!open)}
+      className='sort-dropdown'
     >
       {
         open
-        ? (
-          <div>
+          ? (
+            <div>
+              <div className='sort-header'>
+                <Up />
+              </div>
+              <div className='sort-menu'>
+                {options.map(({ value, label }) =>
+                  <div
+                    onClick={() => update(value)}
+                    key={`${id}-${value}`}
+                    className='sort-menu__option'
+                  >{label}</div>
+                )}
+              </div>
+            </div>
+          )
+          : (
             <div className='sort-header'>
-              <Up />
+              <Down />
             </div>
-            <div className='sort-menu'>
-              {options.map(({ value, label }) =>
-                <div
-                  onClick={() => update(value)}
-                  key={`${id}-${value}`}
-                  className='sort-menu__option'
-                >{label}</div>
-              )}
-            </div>
-          </div>
-        )
-        : (
-          <div className='sort-header'>
-            <Down />
-          </div>
-        )
+          )
       }
 
     </div>

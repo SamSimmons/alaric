@@ -58,13 +58,6 @@ class ClipViewSet(viewsets.ModelViewSet):
 
         return queryset
 
-    @action(detail=False)
-    def watched(self, request):
-        watched = request.session.get('watched', [])
-        queryset = Clip.objects.filter(pk__in=watched)
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
-
 class TagList(generics.ListAPIView):
     serializer_class = TagSerializer
 

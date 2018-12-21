@@ -16,33 +16,33 @@ const ClipsList = (props) => {
   const { count, results: clips } = clipsCache.read(filterParams)
   const grapplers = grapplerCache.read()
   return (
-    <div className="clip-list">
+    <div className='clip-list'>
       {
         count === 0
-        ? <div className='big inverted'>No matching clips.</div>
-        : null
+          ? <div className='big inverted'>No matching clips.</div>
+          : null
       }
       {clips.map(
         (clip) =>
-        <Link className="clip-list__container" key={clip.video} to={`/clip/${clip.id}/`}>
-          <img className="clip__thumbnail" src={clip.thumbnail} alt="clip preview" />
-          <div>
-            {get(
-              find(grapplers, ({ id }) => clip.grappler === id), 'name'
-            )}
+          <Link className='clip-list__container' key={clip.video} to={`/clip/${clip.id}/`}>
+            <img className='clip__thumbnail' src={clip.thumbnail} alt='clip preview' />
+            <div>
+              {get(
+                find(grapplers, ({ id }) => clip.grappler === id), 'name'
+              )}
             </div>
-          <div>{clip.opponent}</div>
-          <div>
-            {clip.tags.map(
-              (t, i) => <span key={`${clip.video}-${i}`}>{`${t}${i === clip.tags.length - 1 ? "" : ", "}`}</span>
-            )}
-          </div>
-        </Link>
+            <div>{clip.opponent}</div>
+            <div>
+              {clip.tags.map(
+                (t, i) => <span key={`${clip.video}-${i}`}>{`${t}${i === clip.tags.length - 1 ? "" : ", "}`}</span>
+              )}
+            </div>
+          </Link>
       )}
       {
         count
-        ? <Pagination />
-        : null
+          ? <Pagination />
+          : null
       }
     </div>
   )

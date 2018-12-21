@@ -5,7 +5,6 @@ import { clipsCache } from '../ClipsList'
 import './pagination.css'
 
 const Pagination = () => {
-
   const { filterValues, filterSetters } = useContext(FilterContext)
   const { updatePage } = filterSetters
   const { page } = filterValues
@@ -38,4 +37,4 @@ const Pagination = () => {
   )
 }
 
-export default Pagination;
+export default Pagination
