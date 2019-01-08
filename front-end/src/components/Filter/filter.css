@@ -9,6 +9,7 @@
 .filter__label svg {
   fill: var(--dark);
   margin-left: auto;
+  cursor: pointer;
 }
 
 .filter__category {

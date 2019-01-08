@@ -4,7 +4,6 @@ import Down from 'typicons.font/src/svg/arrow-sorted-down.svg'
 
 const SortDropdown = ({ options, update, id }) => {
   const [open, toggle] = useState(false)
-
   return (
     <div
       onClick={() => toggle(!open)}

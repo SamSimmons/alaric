@@ -3,7 +3,7 @@ import './filter.css'
 import { unstable_createResource as createResource } from 'react-cache'
 import axios from 'axios'
 import { sortBy, includes } from 'lodash'
-import { FilterContext } from '../App'
+import { Context } from '../App'
 import Collapse from 'typicons.font/src/svg/arrow-minimise.svg'
 import Expand from 'typicons.font/src/svg/arrow-maximise.svg'
 const SortDropdown = lazy(() => import('./SortDropdown'))
@@ -19,7 +19,7 @@ export const opponentCache = createResource(() => axios.get(`/api/opponents/`)
 )
 
 const Filter = (props) => {
-  const { filterValues, filterSetters } = useContext(FilterContext)
+  const { filterValues, filterSetters } = useContext(Context)
 
   const { selectedTags, selectedGrappler, untagged, selectedOpponents } = filterValues
   const { updateTags, updateGrappler, updateUntagged, updateOpponents, updatePage } = filterSetters

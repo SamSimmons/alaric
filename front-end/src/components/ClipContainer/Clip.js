@@ -1,19 +1,39 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { withRouter } from 'react-router-dom'
 import axios from 'axios'
 import { get } from 'lodash'
-import { unstable_createResource as createResource } from 'react-cache'
 import Editing from './Editing'
 import Info from './Info'
-
-const clipCache = createResource((id) => axios.get(`/api/clips/${id}/`).then(({ data }) => data))
 
 const Clip = (props) => {
   const video = useRef()
   const { history } = props
   const { id } = props.match.params
-  const clip = clipCache.read(id)
   const [editing, toggleEditing] = useState(false)
+
+  const [clip, setClip] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [err, setError] = useState(null)
+
+  useEffect(() => {
+    axios.get(`/api/clips/${id}/`)
+      .then(({ data }) => {
+        setClip(data)
+        setLoading(false)
+      })
+      .catch((err) => {
+        setError(err)
+        setLoading(false)
+      })
+  }, [id])
+
+  if (loading) {
+    return <h1>LOADING...</h1>
+  }
+
+  if (err) {
+    return <h1>ERROR!</h1>
+  }
 
   const handleKey = (e) => {
     const { currentTime, duration } = video.current
@@ -37,7 +57,7 @@ const Clip = (props) => {
       />
       {
         editing
-          ? <Editing clip={clip} toggleEditing={toggleEditing} />
+          ? <Editing clip={clip} toggleEditing={toggleEditing} update={setClip} />
           : <Info clip={clip} toggleEditing={toggleEditing} history={history} />
       }
     </div>

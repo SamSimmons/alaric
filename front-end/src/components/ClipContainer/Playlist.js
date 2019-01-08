@@ -1,14 +1,11 @@
 import React, { lazy, useContext } from 'react'
 import { Link } from 'react-router-dom'
-import { getQueryParams } from '../../utils'
-import { clipsCache } from '../ClipsList'
-import { FilterContext } from '../App'
+import { Context } from '../App'
 const Pagination = lazy(() => import('../Pagination'))
 
 const Playlist = (props) => {
-  const { filterValues } = useContext(FilterContext)
-  const filterParams = getQueryParams(filterValues)
-  const { count, results: clips } = clipsCache.read(filterParams)
+  const { clips } = useContext(Context)
+  const { count, results } = clips
 
   const getTagString = (tags) => {
     const withCommas = tags.slice(0, 3).reduce((str, tag, i) => {
@@ -23,7 +20,7 @@ const Playlist = (props) => {
   return (
     <div className="playlist">
       {
-        clips.map(({ id, thumbnail, grappler_name, tags }) => {
+        results.map(({ id, thumbnail, grappler_name, tags }) => {
           return (
             <Link className="playlist__clip" key={id} to={`/clip/${id}/`}>
                 <img src={thumbnail} alt='preview' />

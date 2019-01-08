@@ -1,19 +1,13 @@
 import React, { useContext, lazy } from 'react'
-import { unstable_createResource as createResource } from 'react-cache';
 import { Link } from 'react-router-dom'
-import axios from 'axios'
 import { find, get } from 'lodash'
-import { FilterContext } from './App'
-import { getQueryParams } from '../utils'
+import { Context } from './App'
 import { grapplerCache } from './Filter'
 const Pagination = lazy(() => import('./Pagination'))
 
-export const clipsCache = createResource((params) => axios.get(`/api/clips/${params}`).then(({ data }) => data))
-
 const ClipsList = (props) => {
-  const { filterValues } = useContext(FilterContext)
-  const filterParams = getQueryParams(filterValues)
-  const { count, results: clips } = clipsCache.read(filterParams)
+  const { clips } = useContext(Context)
+  const { count, results } = clips
   const grapplers = grapplerCache.read()
   return (
     <div className='clip-list'>
@@ -22,7 +16,7 @@ const ClipsList = (props) => {
           ? <div className='big inverted'>No matching clips.</div>
           : null
       }
-      {clips.map(
+      {results.map(
         (clip) =>
           <Link className='clip-list__container' key={clip.video} to={`/clip/${clip.id}/`}>
             <img className='clip__thumbnail' src={clip.thumbnail} alt='clip preview' />

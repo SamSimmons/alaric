@@ -1,16 +1,18 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import Select from 'react-select'
 import axios from 'axios'
+import { Context } from '../App'
 import CreatableSelect from 'react-select/lib/Creatable'
 import { find, get } from 'lodash'
 import { opponentCache, grapplerCache, tagsCache } from '../Filter'
 
 const createSelectValue = (val = '') => ({ value: val, label: val })
 
-const Editing = ({ clip, toggleEditing, id }) => {
+const Editing = ({ clip, toggleEditing, id, update }) => {
   const opponents = opponentCache.read()
   const grapplers = grapplerCache.read()
   const tagOptions = tagsCache.read().map(({ name }) => name)
+  const { cacheKey, setCache } = useContext(Context)
 
   const [ grapplerId, updateGrapplerId ] = useState(clip.grappler)
   const [ opponentId, updateOpponentId ] = useState(clip.opponent)
@@ -64,6 +66,9 @@ const Editing = ({ clip, toggleEditing, id }) => {
             tags: tagsList
           }
           axios.patch(`/api/clips/${clip.id}/`, data)
+            .then(({ data }) => update(data))
+
+          setCache(cacheKey + 1)
           toggleEditing(false)
         }}>Save</button>
       </div>

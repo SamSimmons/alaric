@@ -1,15 +1,11 @@
 import React, { useContext } from 'react'
-import { FilterContext } from '../App'
-import { getQueryParams } from '../../utils'
-import { clipsCache } from '../ClipsList'
+import { Context } from '../App'
 import './pagination.css'
 
 const Pagination = () => {
-  const { filterValues, filterSetters } = useContext(FilterContext)
+  const { filterValues, filterSetters, next } = useContext(Context)
   const { updatePage } = filterSetters
   const { page } = filterValues
-
-  const { next } = clipsCache.read(getQueryParams(filterValues))
 
   const prevEnabled = page > 1
   const nextEnabled = next !== null
